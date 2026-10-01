@@ -17,8 +17,8 @@
 | 최고 단일 제출 (E53) | 0.8955 | 0.3615 | 0.6663 | **0.5902** |
 | 외부 데이터 도입 전 (E43) | 0.8955 | 0.3246 | 0.6342 | 0.5671 |
 
-`final_submission/` 은 마지막으로 만든 제출본(E57)이다.
-E53 에 아직 리더보드에 묻지 않았던 두 축을 더했다: Stage 2 판별기 충돌 편향 −2, Stage 3 속력 평활 25 + 민감도 0.38.
+`final_submission/` 은 최종 제출본 **E53** 이다 (검증된 최고점, 단일 파일로 세 Stage 최고를 모두 담는다).
+이후 E57~E60 후보(충돌 편향, 속력 평활 재조정, 추가 학습 충돌 CNN, Stage 1 시간 신뢰도 가중 등)를 만들었으나 채택 근거가 부족해 E53 을 유지했다.
 
 ## 방법
 
@@ -66,7 +66,7 @@ E53 에 아직 리더보드에 묻지 않았던 두 축을 더했다: Stage 2 �
 ## 저장소 구조
 
 ```
-final_submission/        최종 제출본 (E57) — 이 폴더를 zip 으로 묶으면 제출 파일
+final_submission/        최종 제출본 (E53) — 이 폴더를 zip 으로 묶으면 제출 파일
   inference.py           predict_stage1 / predict_stage2 / predict_stage3
   collision_net*.pt      Stage 2 충돌 판별기 3개 (CCD 학습)
   ego_final.pt           Stage 3 자기운동 모델 (comma2k19 학습)
@@ -76,7 +76,7 @@ training/
   stage3_egomotion/      comma2k19 자기운동 모델 학습
 tools/
   audit.py               제출 전 규정·형식·예산 방어 점검
-  build_e57.py           E53 → E57 패치 스크립트 (모든 제출본은 이런 결정론적 패치로 만들었다)
+  build_e57.py           E53 → E57 패치 스크립트 예시 (모든 제출본은 이런 결정론적 패치로 만들었다)
 docs/                    전체 기록, Stage 2 구조 설명, DACON Q&A 정리
 ```
 
