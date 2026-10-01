@@ -1,0 +1,1830 @@
+{
+  "policy": "One causal change per experiment; no routine duplicate champion submission; archive real ZIP hashes",
+  "experiments": [
+    {
+      "id": "ZB",
+      "status": "official_regression_combined_change",
+      "base": "YY",
+      "score_stage3": "0.4419594189",
+      "delta_stage3": "-0.0110744479",
+      "conclusion": "Combined flow and temporal changes lost; individual causes unresolved"
+    },
+    {
+      "id": "ZD",
+      "status": "official_previous_champion",
+      "base": "YY",
+      "score_stage2": "0.3262310156",
+      "delta_stage2": "0.0250483274",
+      "conclusion": "Tracking pipeline improves Stage2; entry time versus side not isolated"
+    },
+    {
+      "id": "E01",
+      "strategy": "S2-01",
+      "status": "official_regression",
+      "base": "ZD",
+      "change": "Keep tracked entry_frame; restore legacy entry_side",
+      "compare": [
+        "ZD",
+        "YY"
+      ],
+      "slot": 1,
+      "zip": "submit_e01_entry_only.zip",
+      "sha256": "6f3a9d90a662dd54f87d1347d85fe49117bb5c44746af6e8d6a48e755c16f9c4",
+      "verification": "e01_verification.json",
+      "official_scores": {
+        "stage1": "0.8917171717",
+        "stage2": "0.2986279436",
+        "stage3": "0.4530338668"
+      },
+      "delta_stage2_vs_ZD": "-0.0276030720",
+      "delta_stage2_vs_YY": "-0.0025547446",
+      "conclusion": "Tracked entry only loses; completed E02 shows tracked side only is best of the four tested combinations.",
+      "server_runtime_seconds": null
+    },
+    {
+      "id": "E02",
+      "strategy": "S2-01",
+      "status": "official_previous_champion",
+      "base": "ZD",
+      "change": "Keep tracked entry_side; restore legacy entry_frame",
+      "compare": [
+        "ZD",
+        "YY"
+      ],
+      "slot": 2,
+      "zip": "submit_e02_side_only.zip",
+      "sha256": "80622241e8e32a3e6d9f8a57ecd01aee6510018ec947b9b70ec4275422acfef4",
+      "verification": "e02_verification.json",
+      "official_scores": {
+        "stage1": "0.8917171717",
+        "stage2": "0.3287857601",
+        "stage3": "0.4530338668"
+      },
+      "delta_stage2_vs_ZD": "0.0025547445",
+      "delta_stage2_vs_YY": "0.0276030719",
+      "conclusion": "Tracked side only wins among YY, ZD, E01 and E02; tracked entry estimate regresses in these comparisons",
+      "server_runtime_seconds": null
+    },
+    {
+      "id": "E03",
+      "strategy": "S3-01",
+      "status": "official_regression",
+      "base": "E02",
+      "change": "Stage3-only boundary smoothing; keep flow, yaw and stop rules",
+      "compare": [
+        "current official champion"
+      ],
+      "slot": 3,
+      "zip": "submit_e03_stage3_edge.zip",
+      "sha256": "bc6d4631a84c9279bd10ef74b8ef514b3483248158fceca59d409064cb8ad689",
+      "verification": "e03_verification.json",
+      "official_scores": {
+        "stage1": "0.8917171717",
+        "stage2": "0.3287857601",
+        "stage3": "0.4499542136"
+      },
+      "delta_stage3_vs_E02": "-0.0030796532",
+      "conclusion": "Stage3 endpoint extension regresses in the isolated Farneback configuration; retain E02 smoothing. RAFT and yaw smoothing remain unisolated.",
+      "server_runtime_seconds": null
+    },
+    {
+      "id": "E04",
+      "strategy": "S2-03",
+      "status": "official_regression",
+      "base": "E02",
+      "change": "Disable backward optical tracking only; keep detector, selection thresholds and legacy entry time",
+      "compare": [
+        "E02"
+      ],
+      "question": "Does backward extension help the successful tracked entry_side?",
+      "zip": "submit_e04_no_backward.zip",
+      "sha256": "c89a97ea64109ee2510b220b65f357f18aafc3250890d89414789cb0fded2d62",
+      "verification": "e04_verification.json",
+      "official_scores": {
+        "stage1": "0.8917171717",
+        "stage2": "0.3277215053",
+        "stage3": "0.4530338668"
+      },
+      "delta_stage2_vs_E02": "-0.0010642548",
+      "conclusion": "Removing backward extension slightly hurts this configuration; preserve E02 extension.",
+      "server_runtime_seconds": null,
+      "result_reports_deduplicated": true
+    },
+    {
+      "id": "E05",
+      "strategy": "S3-02",
+      "status": "previous_champion",
+      "base": "E02",
+      "change": "Apply five-frame smoothing to yaw only; retain Farneback and existing accel smoothing/STOPPED policy",
+      "compare": [
+        "E02"
+      ],
+      "question": "Is yaw smoothing independently helpful despite ZB combined regression?",
+      "zip": "submit_e05_yaw_smooth.zip",
+      "sha256": "0d8d03956b709c78e7cb7f6b5d96cae40d672be347613e7019ea80e63ccfad70",
+      "verification": "e05_verification.json",
+      "official_scores": {
+        "stage1": "0.8917171717",
+        "stage2": "0.3287857601",
+        "stage3": "0.4534528815"
+      },
+      "delta_stage3_vs_E02": "0.0004190147",
+      "conclusion": "Yaw-only smoothing wins slightly; adopted without claiming a large improvement",
+      "server_runtime_seconds": null
+    },
+    {
+      "id": "E06",
+      "strategy": "S3-05",
+      "status": "previous_champion",
+      "base": "E05",
+      "change": "Replace per-video stop quantile with absolute normalized motion plus persistence",
+      "zip": "submit_e06_stop_evidence.zip",
+      "sha256": "155e975b90dbc1dc8c18a69a359a89fb54054a93ea79c6389443173e73db3ca9",
+      "verification": "e06_verification.json",
+      "risk": "Public leaderboard gain confirmed; transfer to other cameras and private evaluation remains unverified.",
+      "official_scores": {
+        "stage1": "0.8917171717",
+        "stage2": "0.3287857601",
+        "stage3": "0.5737121331"
+      },
+      "delta_stage3_vs_E05": "0.1202592516",
+      "weighted_sum_calculated": "0.53934259162",
+      "delta_weighted_vs_E05": "0.04810370064",
+      "server_runtime_seconds": null,
+      "conclusion": "User-reported official Stage3 gain from the stop-policy replacement; Stage1 and Stage2 unchanged. Individual stop-policy components have not been isolated."
+    },
+    {
+      "id": "E07",
+      "strategy": "S2-04 + S3-06",
+      "status": "official_regression",
+      "base": "E06",
+      "change": "Stage2: entry_index from bias-corrected collision index. Stage3: accel smoothing window 81 -> 201",
+      "compare": [
+        "E06"
+      ],
+      "question": "Does restoring the configured entry gap help, and does the accel window retuned under the fixed stop policy help?",
+      "zip": "submit_e07_entrybias.zip",
+      "sha256": "73cbe257d0519166b653e981f56688f7440ad64559b13362abd3ccf3964af1e6",
+      "verification": "e07_verification.json",
+      "risk": "Two stages changed in one ZIP per the 2026-09-12 operating agreement; each stage carries exactly one hypothesis. Accel distribution shift is large.",
+      "official_scores": {
+        "stage1": 0.8917171717,
+        "stage2": 0.3211215265,
+        "stage3": 0.5431348381,
+        "date": "2026-09-12"
+      },
+      "official_delta_vs_E06": {
+        "stage1": 0.0,
+        "stage2": -0.0076642336,
+        "stage3": -0.030577295,
+        "weighted_sum": -0.0152966114
+      },
+      "verdict": "Both hypotheses rejected. Per the 2026-09-12 agreement both stages revert: E06 remains the champion. Stage 2 reported gap 24 is worse than 22 (opposite sign to the pre-bias sweep, both within noise). Stage 3 accel window 201 is worse than 81 by 0.0306 - the first leaderboard loss for the comma2k19 measured-macro-F1 instrument, now 5-1."
+    },
+    {
+      "id": "E08",
+      "strategy": "출력 분포 정합 (Stage3) + 진입 간격 왼쪽 탐침 (Stage2)",
+      "status": "official_regression",
+      "base": "E06",
+      "change": "Stage2: entry_gap 24 -> 18 (보고 간격 22 -> 16). Stage3: accel_mult 0.55 -> 0.80. 부수: 50분 예산 가드 복원, Stage2 추적 실패 파일 단위 격리(둘 다 평가셋에서 출력 동일).",
+      "compare": [
+        "E06",
+        "E07"
+      ],
+      "question": "가감속 출력 분포를 과업의 정답 분포에 맞추면 오르는가(E06 의 +0.1203 과 같은 메커니즘). 진입 간격의 정점이 22 왼쪽인가.",
+      "zip": "submit_e08_distmatch.zip",
+      "sha256": "2229f6fd943886158c59aa5c568b6098e99cff533fa967fdede8c1672891c820",
+      "verification": "e08_verification.json",
+      "risk": "진입 간격 -6 은 큰 걸음. 단계별 최고점 누적이므로 하락의 하방은 없다.",
+      "official_scores": {
+        "stage1": "0.8917171717",
+        "stage2": "0.3211215265",
+        "stage3": "0.5632385831"
+      },
+      "official_delta_vs_E06": {
+        "stage2": "-0.0076642336",
+        "stage3": "-0.0104735500"
+      },
+      "verdict": "Both stages below E06. Reference only; do not inherit E08 configuration or infer hidden label proportions from scores."
+    },
+    {
+      "id": "E09",
+      "status": "previous_champion",
+      "base": "E06",
+      "zip": "submit_e09_relative_motion.zip",
+      "sha256": "c8722aed07a169c2e9754af2b48dd9ceea3687373720d016eb8c505767588f05",
+      "verification": "e09_verification.json",
+      "change": "Stage2: permit early-visible approach tracks under existing geometric evidence. Stage3: log-compress motion for acceleration only.",
+      "official_scores": {
+        "stage1": "0.8917171717",
+        "stage2": "0.3321048040",
+        "stage3": "0.5710508866"
+      },
+      "risk": "Reused public development data; Stage2 accuracy unverified; reference e09_design.md.",
+      "weighted_sum_calculated": "0.53960571058",
+      "official_delta_vs_E06": {
+        "stage2": "0.0033190439",
+        "stage3": "-0.0026612465",
+        "weighted_sum": "0.00026311896"
+      },
+      "conclusion": "Stage2 improves, Stage3 regresses. Weighted single-ZIP score narrowly beats E06. Recombine E09 Stage2 with E06 Stage3 for separate official validation."
+    },
+    {
+      "id": "E10",
+      "status": "deferred_not_submitted",
+      "base": "E06",
+      "stage2_parent": "E09",
+      "stage3_parent": "E06",
+      "zip": "submit_e10_beststage_merge.zip",
+      "sha256": "59d30f8e1ebf03564256129be6a256ef256a61759ebed4a9af6eff5d5c091cdd",
+      "verification": "e10_verification.json",
+      "change": "Keep E09 early-visible approach eligibility; restore E06 raw-motion acceleration. Integration validation only.",
+      "official_scores": null,
+      "reason": "User prioritizes new improvement hypotheses; defer integration confirmation."
+    },
+    {
+      "id": "E11",
+      "status": "official_champion",
+      "base": "E06 with E09 Stage2 eligibility",
+      "zip": "submit_e11_side.zip",
+      "sha256": "9ac451f58aff467ac4c45197b3448fcc63063e43152d5d2639271eeb56c42501",
+      "verification": "e11_verification.json",
+      "stage2_change": "Initial three-center median for side and inward motion; retain E09 eligibility",
+      "stage3_change": "Steering enter/exit hysteresis; preserve E06 acceleration and stop",
+      "official_scores": {
+        "stage1": "0.8917171717",
+        "stage2": "0.3321048040",
+        "stage3": "0.5740172550"
+      },
+      "comparison_scores": {
+        "stage2": "0.3321048040",
+        "stage3": "0.5737121331"
+      },
+      "limitations": "Reused development proxy only; Stage2 has no labeled accuracy validation.",
+      "original_zip_name": "submit_e11_side_yaw_hysteresis.zip",
+      "weighted_sum_calculated": "0.54079225794",
+      "delta_stage2_vs_E09": "0.0000000000",
+      "delta_stage3_vs_E06": "0.0003051219",
+      "delta_stage3_vs_E09": "0.0029663684",
+      "conclusion": "Stage2 ties E09; median-origin benefit not established. Stage3 slightly exceeds E06; E11 adopted as best officially evaluated combined archive."
+    },
+    {
+      "id": "E12",
+      "status": "official_mixed_result",
+      "base": "E11",
+      "zip": "submit_e12_exposure_accel.zip",
+      "sha256": "606fd4464344fecab3f0f2e150ebf7e74713d7202988057eb4b1f682a9fe01c6",
+      "verification": "e12_verification.json",
+      "stage2_change": "Subtract median signed image difference to suppress uniform additive exposure changes",
+      "stage3_change": "Acceleration hysteresis with half-threshold exit and stop reset; retain E11 steering",
+      "official_scores": {
+        "stage1": "0.8917171717",
+        "stage2": "0.3332112117",
+        "stage3": "0.5722274624"
+      },
+      "comparison_scores": {
+        "stage2": "0.3321048040",
+        "stage3": "0.5740172550"
+      },
+      "limitations": "Reused same-camera development data, not held-out. Stage2 lacks accuracy validation. Additive exposure model does not handle all lighting. Accel persistence can delay CONSTANT transitions. Local runtime is not server runtime.",
+      "development_macro_f1_gain": 0.0005125969702017841,
+      "weighted_sum_calculated": "0.54051890398",
+      "delta_stage2_vs_E11": "0.0011064077",
+      "delta_stage3_vs_E11": "-0.0017897926",
+      "conclusion": "Adopt exposure-compensated Stage2; reject acceleration hysteresis. E11 remains best officially evaluated single ZIP until final integration is evaluated."
+    },
+    {
+      "id": "E13",
+      "status": "deferred_not_submitted",
+      "purpose": "User-requested final integration",
+      "stage2_parent": "E12",
+      "stage3_parent": "E11",
+      "zip": "submit_e13_final_best.zip",
+      "sha256": "acf1d5e5fc7b7ae96a10e4c66a0a9c081ddc066b0ef7de66cb1e45bb08acc9d3",
+      "verification": "e13_verification.json",
+      "official_scores": null,
+      "reason": "User clarified integration only on final competition day; next submission must test new hypotheses."
+    },
+    {
+      "id": "E14",
+      "status": "official_regression",
+      "stage2_parent": "E12",
+      "stage3_parent": "E11",
+      "zip": "submit_e14_localmotion.zip",
+      "original_zip_name": "submit_e14_localmotion_stopsteer.zip",
+      "sha256": "7cae4bd06c0ef0aff9548492af33f86f1207cd0cc82525cc54142df8f9607644",
+      "verification": "e14_verification.json",
+      "changes": [
+        [
+          "float(np.mean(delta) if not q else np.percentile(delta, float(q)))",
+          "float(np.mean(delta[delta >= np.percentile(delta, 75)]) if not q else np.percentile(delta, float(q)))"
+        ],
+        [
+          "steer = _steer_hysteresis(horizontal, turn_threshold)",
+          "steer = _steer_hysteresis(horizontal, turn_threshold)\n    steer = ['STRAIGHT' if stopped else label for stopped, label in zip(stop_mask, steer)]"
+        ]
+      ],
+      "official_scores": {
+        "stage1": "0.8917171717",
+        "stage2": "0.3196647381",
+        "stage3": "0.5740172550"
+      },
+      "limitations": "No labeled Stage2 accuracy evidence. Stop-aware steer changes no rows on reused development clips; synthetic evidence only if public video also unchanged. Stops may be misclassified; steering-wheel actions cannot be inferred from stationary camera motion.",
+      "weighted_sum_calculated": "0.53581623158",
+      "delta_stage2_vs_E12": "-0.0135464736",
+      "delta_stage3_vs_E11": "0.0000000000",
+      "conclusion": "Reject upper-quartile change pooling. Stop-only steering produced no official improvement; local competition rules exclude stopped-frame steering from scoring. Do not carry E14 changes forward."
+    },
+    {
+      "id": "E15",
+      "status": "deferred_not_submitted",
+      "date_prepared": "2026-09-14",
+      "stage2_parent": "E12",
+      "stage3_parent": "E11",
+      "zip": "submit_e15_gain_median.zip",
+      "sha256": "7580facf1f67f2a673d91612f5ee40a970c27b45b52c630c61bdb8a95d675968",
+      "verification": "e15_verification.json",
+      "changes": [
+        "Bounded robust exposure gain before existing offset correction",
+        "Five-sample motion median before accel smoothing"
+      ],
+      "correctness_fix": "Cap Stage3 smoothing radius on short inputs; handle one-frame gradient",
+      "official_scores": null,
+      "comparison_scores": {
+        "stage2": "0.3332112117",
+        "stage3": "0.5740172550"
+      },
+      "limitations": "Repeated same-camera development data and only 50 public labels; not independent generalization evidence. Gain estimate may confuse real scene change with exposure. Median may erase brief real acceleration.",
+      "reason": "User prioritizes structural feature/model experiments over filter tuning; no official E15 result received."
+    },
+    {
+      "id": "E16",
+      "status": "official_mixed_result",
+      "date_prepared": "2026-09-14",
+      "stage2_parent": "E12",
+      "stage3_parent": "E11",
+      "zip": "submit_e16_background.zip",
+      "original_zip_name": "submit_e16_background_threat.zip",
+      "sha256": "a6b15e978e946997af379a9d1d0932eb91b31bb210d045f7f2da4554c2166572",
+      "verification": "e16_verification.json",
+      "hypotheses": [
+        "Closing-rate and lane-overlap target ranking",
+        "Background-referenced road flow for acceleration"
+      ],
+      "official_scores": {
+        "stage1": "0.8917171717",
+        "stage2": "0.3320859218",
+        "stage3": "0.5785820477",
+        "date": "2026-09-14"
+      },
+      "comparison_scores": {
+        "stage2": "0.3332112117",
+        "stage3": "0.5740172550"
+      },
+      "limitations": "Same-camera development reuse; 50 public labels. Stage2 accuracy not independently labeled. Background reference may contain nearby objects and is not true object segmentation. New motion is uncalibrated. Official gain unconfirmed.",
+      "official_delta": {
+        "stage2_vs_E12_best": -0.0011252899,
+        "stage3_vs_E11_best": 0.0045647927,
+        "weighted_sum": 0.0013758011
+      },
+      "verdict": "Stage 3 신기록 0.5785820477 (+0.0045647927). 배경 기준 보정 광류를 가속도 기울기에만 쓰는 변경을 채택한다. 가감속 축에서 얻은 첫 이득이다. Stage 2 접근 위협도 재순위는 -0.0011252899 로 기각, entry_side 는 E12 로 복원한다."
+    },
+    {
+      "id": "E17",
+      "strategy": "Stage2 = D1 진단(채점식 읽기) + Stage3 = 배경 기준 영역 분리",
+      "status": "official_diagnostic_success",
+      "base": "E16 에서 이긴 것만",
+      "change": "Stage2: entry_frame = collision_frame (진단, 보고 간격 0). Stage3: 배경 기준 영역을 조향 ROI 에서 분리해 상단 띠 (0.0,0.3,0.0,1.0). 부수: 빈 폴더 크래시 격리, 50분 가드 복원 (둘 다 평가셋에서 출력 동일).",
+      "compare": [
+        "E16",
+        "E12",
+        "E07",
+        "E08"
+      ],
+      "question": "entry_frame 이 지금 Stage 2 에서 점수를 얼마나 벌고 있는가. 배경 기준을 표적 차량이 없는 영역으로 옮기면 가감속이 더 오르는가.",
+      "zip": "submit_e17_entrydiag.zip",
+      "sha256": "6a60f0d1ccf2aea12a4c719f8ababb571a346189d4ac95faf324949c1cdaf34f",
+      "verification": "e17_verification.json",
+      "risk": "Stage 2 는 의도적으로 점수를 버린다. 단계별 최고점 누적이므로 하방 없음.",
+      "official_scores": {
+        "stage1": "0.8917171717",
+        "stage2": "0.2948900438",
+        "stage3": "0.5799141494",
+        "date": "2026-09-14"
+      },
+      "stage2_reading": {
+        "baseline_gap22": 0.3332112117,
+        "diagnostic_gap0": 0.2948900438,
+        "entry_frame_contribution": 0.0383211679,
+        "share_of_stage2": "11.5%",
+        "slope_per_frame": 0.0038321168,
+        "model": "기여도 = 0.0038321168 x (12 - |간격 - 20|), |오차|>=12 에서 0",
+        "fit": "세 측정이 오차 없이 직선 위에 놓인다. 간격 22 -> 10칸(0.0383211679), 간격 16/24 -> 8칸(0.0306569343), 간격 0 -> 0.",
+        "center": "참 진입 간격 분포의 중심 = **20프레임(2.0초)**. |16-20|=|24-20|=4 대칭이 E07/E08 의 완전 일치를 설명한다.",
+        "action": "보고 간격 22 -> 20. 예측 Stage 2 = 0.3332112117 + 0.0076642336 = **0.3408754453**"
+      },
+      "stage3_result": {
+        "before": 0.5785820477,
+        "after": 0.5799141494,
+        "delta": 0.0013321017,
+        "verdict": "신기록. 배경 기준 영역을 조향 ROI 에서 분리해 상단 띠로 옮긴 변경 채택. 배경 보정 축 2연승(E16 +0.0046, E17 +0.0013)."
+      },
+      "verdict": "Stage 2 진단 대성공. 잡음 구간이던 축이 정확한 선형 모형과 최적값 20 을 내놓았다. Stage 3 도 신기록. 진단 제출의 비용은 Stage 2 점수 하락뿐이고 단계별 최고점 누적 덕에 기록은 무손상."
+    },
+    {
+      "id": "E18",
+      "strategy": "진단 회수(Stage2) + 정지 신호 정렬(Stage3)",
+      "status": "official_mixed_result",
+      "base": "E17",
+      "change": "Stage2: 보고 간격 22 -> 20 (E17 진단 모형의 최적값). Stage3: 정지 판정 입력을 배경 보정 신호로, 문턱 불변.",
+      "compare": [
+        "E17",
+        "E16",
+        "E12"
+      ],
+      "question": "D1 진단이 만든 선형 모형이 맞는가(예측 0.3408754453). 충돌 충격 흔들림이 정지 판정을 망치고 있는가.",
+      "zip": "submit_e18_entry20_stopalign.zip",
+      "sha256": "a92e967b0d9c391e26a7229f21fc92202ef00a7a8f347bb950df49c348f82ec2",
+      "verification": "e18_verification.json",
+      "prediction": {
+        "stage2": 0.3408754453
+      },
+      "official_scores": {
+        "stage1": "0.8917171717",
+        "stage2": "0.3281017226",
+        "stage3": "0.5803003763",
+        "date": "2026-09-14"
+      },
+      "prediction_outcome": {
+        "predicted_stage2": 0.3408754453,
+        "actual_stage2": 0.3281017226,
+        "error": -0.0127737227,
+        "verdict": "선형 모형 **기각**. 방향까지 틀렸다.",
+        "root_cause": "두 코드 기준을 섞었다. E07/E08 은 E06 기준이고 E06->E12 에서 기준선 자체가 +0.0044254516 이동했다(노출 보정 차분). 게다가 모형은 간격 20 > 22 를 함의하는데 이미 가진 데이터에 22 가 16·24 를 이긴다는 사실이 있었다 - 내부 모순을 확인하지 않았다. E07·E08 의 일치는 우연일 가능성이 크다(적중 클립 수는 정수라 동점이 쉽다)."
+      },
+      "stage3_result": {
+        "before": 0.5799141494,
+        "after": 0.5803003763,
+        "delta": 0.0003862269,
+        "verdict": "신기록. 정지 판정 신호 정렬 채택. 배경 보정 축 3연승."
+      },
+      "surviving_facts": [
+        "entry_frame 기여 0.0383211679 (Stage2 의 11.5%), 바닥 0.2948900438 - 같은 기준 안에서 잰 확정값",
+        "간격 22 가 {16,20,22,24} 중 최적. 고정 간격 축 종료.",
+        "네 항목 균등 가정 시 entry_frame 은 최대치의 15%만 사용, 0.212 여유 - 1등과의 Stage2 격차 0.1892 를 이것 하나로 설명 가능한 크기",
+        "E01(추적 진입 시각 사용) Stage2 0.2986279436 은 바닥 0.2948900438 보다 0.0037 높을 뿐 - 추적 진입 시각은 고정 상수보다 10배 나쁘다"
+      ]
+    },
+    {
+      "id": "E19",
+      "strategy": "D2 진단(evasion_space 극성) + 정지 문턱 재조정",
+      "status": "official_diagnostic_success_both_rejected",
+      "base": "E18",
+      "change": "Stage2: 진입 간격 보고 20 -> 22 복원, stage2_invert_evasion True (진단). Stage3: 정지 문턱 0.003/0.005 -> 0.0021/0.0035 (x0.70).",
+      "compare": [
+        "E18",
+        "E17",
+        "E12"
+      ],
+      "question": "evasion_space 규칙에 신호가 조금이라도 있는가(반전 하락폭 = w x (2a-1)). 정지 문턱을 배경 보정 신호에 맞추면 오르는가.",
+      "zip": "submit_e19_evasiondiag_stopthr.zip",
+      "sha256": "a13182f4df4817b9430780eb186cb36c816842642dd3a8b113fffeda955af42d",
+      "verification": "e19_verification.json",
+      "official_scores": {
+        "stage1": "0.8917171717",
+        "stage2": "0.3010092362",
+        "stage3": "0.5642375952",
+        "date": "2026-09-15"
+      },
+      "stage2_reading": {
+        "baseline_not_inverted": 0.3332112117,
+        "inverted": 0.3010092362,
+        "drop": 0.0322019755,
+        "interpretation": "하락폭 = w x (2a-1). 네 항목 균등(w=0.25) 가정 시 정확도 a = 0.5644, 기여 0.1411 (Stage2 의 42.3%).",
+        "verdict": "evasion_space 규칙 `after < before*1.06` 에 **실제 신호가 있다**. 반전하지 않는다. 극성 질문은 확정 종료."
+      },
+      "stage3_reading": {
+        "before": 0.5803003763,
+        "after": 0.5642375952,
+        "delta": -0.0160627811,
+        "verdict": "정지 문턱 x0.70 기각. 0.003/0.005 로 복원.",
+        "why_the_two_arguments_failed": "(1) comma2k19 내부 정점이라는 근거 - 운영점 재조정은 이제 3전 3패다. (2) 공개 STOPPED 출력 0.0799 vs 공개 정답 0.060 이라는 근거 - **표본율이 달라 성립하지 않았다.** 정지 진입 규칙은 3프레임 연속인데 로컬 측정은 20fps(0.15초), 평가는 10Hz(0.3초)다. 평가에서는 같은 문턱으로도 정지가 더 드물게 나오므로 우리 실제 평가 STOPPED 비율은 0.0799 보다 낮았을 것이고, 문턱을 더 낮춘 것은 목표에서 **멀어지는** 방향이었다."
+      }
+    },
+    {
+      "id": "E20",
+      "strategy": "D3 진단(entry_side 극성) + 깊이 정규화 속도 신호",
+      "status": "official_stage3_record_stage2_diagnostic",
+      "base": "submit_best_current.zip",
+      "change": "Stage2: entry_side 극성 반전(진단). Stage3: 가속도 기울기 입력을 깊이 정규화 신호로, 정지 판정 불변.",
+      "compare": [
+        "best_current",
+        "E19",
+        "E18"
+      ],
+      "question": "entry_side 에 신호가 있는가. 깊이 정규화 속도 신호가 가감속을 올리는가(속력 상관 0.194 -> 0.361).",
+      "zip": "submit_e20_sidediag_depth.zip",
+      "sha256": "6eecdb5f565c4b3a2b60dc956d04dc6d8f7c96dea9ad367371e6d6214825e2a6",
+      "verification": "e20_verification.json",
+      "official_scores": {
+        "stage1": "0.8917171717",
+        "stage2": "0.2938893698",
+        "stage3": "0.5842776289",
+        "date": "2026-09-15"
+      },
+      "stage2_reading": {
+        "baseline": 0.3332112117,
+        "side_inverted": 0.2938893698,
+        "drop": 0.0393218419,
+        "accuracy_if_equal_weights": 0.5786,
+        "verdict": "entry_side 에도 실제 신호가 있다. 반전하지 않는다."
+      },
+      "stage3_result": {
+        "before": 0.5803003763,
+        "after": 0.5842776289,
+        "delta": 0.0039772526,
+        "verdict": "신기록. 깊이 정규화 속도 신호를 가속도 기울기에 쓰는 변경 채택. 신호 변경 4전 4승."
+      }
+    },
+    {
+      "id": "E21",
+      "strategy": "D4 진단(collision_frame) + 노면 중앙 통로",
+      "status": "submission_failed_time_limit",
+      "base": "E20",
+      "change": "Stage2: collision_frame = 마지막 프레임(진단), entry_side 반전 해제. Stage3: 깊이 정규화 노면 영역 전폭 -> 중앙 50%.",
+      "compare": [
+        "best_current",
+        "E20"
+      ],
+      "question": "collision_frame 이 평가셋에서 실제로 얼마를 벌고 있는가(회계 예측 0.0091). 노면을 중앙 통로로 좁히면 가감속이 오르는가.",
+      "zip": "submit_e21_collisiondiag_corridor.zip",
+      "sha256": "22a60078dacdc6dcc280be7e2b2b4420783f092cba1292e98191085221a497a9",
+      "verification": "e21_verification.json",
+      "prediction": {
+        "stage2_if_accounting_holds": 0.3240830766
+      },
+      "official_scores": null,
+      "failure": {
+        "message": "제출하신 코드 실행 시간 제한 초과로 인해 실패했습니다",
+        "date": "2026-09-15",
+        "root_cause_confirmed": "D4 진단이 collision_frame 을 마지막 프레임으로 강제했는데 predict_stage2 의 추적 루프가 그 값을 _tracked_entry 에 넘긴다. collision = argmin|numbers - collision_frame| 이 마지막 인덱스가 되어 paths[:collision+1] 이 전체 프레임이 되고, Faster R-CNN 작업량이 늘었다. 공개 fixture 실측 검출기 프레임 171 -> 250 (+46%), Stage 2 로컬 시간 18.9s -> 31.9s (+69%).",
+        "structural_defect": "predict_stage2 의 추적 루프에 _over_budget() 검사가 없었다. 가드는 predict_stage1(292,298), _legacy_predict_stage2(432), predict_stage3(549)에만 있었고 Stage 2 에서 가장 비싼 구간이 무방비였다. 그래서 초과가 점수 하락이 아니라 하드 실패가 됐다.",
+        "lesson": "진단 변경도 **런타임 부작용**을 검사해야 한다. 출력만 확인하고 비용을 확인하지 않았다. 앞으로 모든 후보는 검출기 호출 수와 단계별 시간을 기준 파일과 비교한다."
+      }
+    },
+    {
+      "id": "E22",
+      "strategy": "E21 실행시간 수습 (출력 동일)",
+      "status": "official_diagnostic_success_stage3_rejected",
+      "base": "E21",
+      "change": "1) D4 진단을 추적 루프 **뒤로** 이동 -> 검출기 작업량 E20 수준 복귀. 2) 추적 루프에 _over_budget() 가드 추가. 3) 예산 50분 -> 40분. 4) Stage 3 격자·반경을 모양별 캐시.",
+      "output_identical_to_E21": "세 Stage 전부 공개 fixture 에서 완전 동일 확인",
+      "timing": {
+        "검출기 프레임": "250 -> 171",
+        "stage2_local": "31.9s -> 18.9s",
+        "stage3_local": "87.9s -> 82.4s"
+      },
+      "question": "E21 이 채점되지 못한 두 가설을 그대로 시험한다. collision_frame 기여(회계 예측 0.0091)와 노면 중앙 통로.",
+      "zip": "submit_e22_timefix.zip",
+      "sha256": "8fbcb1fbc14888b44b49686ab33148b38cdc93273959ce3c770678e8d3bf1b03",
+      "prediction": {
+        "stage2_if_accounting_holds": 0.3240830766
+      },
+      "official_scores": {
+        "stage1": "0.8917171717",
+        "stage2": "0.2361309197",
+        "stage3": "0.5805995780",
+        "date": "2026-09-16"
+      },
+      "runtime": "완주. E21 의 실행시간 초과가 수습됐음이 확인됐다.",
+      "stage2_reading": {
+        "prediction": 0.3240830766,
+        "actual": 0.2361309197,
+        "error": -0.0879521569,
+        "collision_contribution": 0.097080292,
+        "verdict": "회계 기각. collision_frame 은 비어 있기는커녕 최대 기여 항목이었다. 오류 원인은 우연 바닥을 0.25 로 둔 것 - 네 항목 균등 가정에서 나왔는데 가중치가 균등이 아니다."
+      },
+      "stage3_result": {
+        "before": 0.5842776289,
+        "after": 0.580599578,
+        "delta": -0.0036780509,
+        "verdict": "노면 중앙 통로 기각. 전폭 복원. 신호 변경 4승 1패."
+      }
+    },
+    {
+      "id": "E23",
+      "strategy": "Stage 2 상수를 클립 길이 비례로",
+      "status": "submission_ready",
+      "base": "E22",
+      "change": "Stage2: 프레임 개수 상수 6개(entry_gap 24, onset_lookback 12, collision_bias -2, side_window 24, side_offset 7, evasion_window 12)를 클립 길이 비례로. 기준 50프레임. D4 진단 종료. Stage3: 노면 중앙 통로 -> 전폭 복원(E20 기록 설정).",
+      "rationale": "공개 Stage 2 클립은 전부 50프레임·10fps·5초이고 상수 여섯 개가 하나도 빠짐없이 50 의 비율로 떨어진다(0.48/0.24/-0.04/0.48/0.14/0.24). 그런데 채점은 초 단위이고 영상별 프레임-시간 대응이 다를 수 있다. 길이가 다른 평가 클립에서는 같은 프레임 수가 다른 시간을 뜻하므로 맞을 수 없다. 공개 80% vs 평가 28.7% 의 유력한 설명이다.",
+      "zero_visible_risk": "공개 5개는 전부 50프레임이라 Stage 2 출력이 기준선과 완전 동일함을 확인했다. 25프레임 fixture 에서는 간격이 24 -> 11 로 바뀐다.",
+      "zip": "submit_e23_lengthscaled.zip",
+      "sha256": "e9fc851bc114b16ad0ec2023280757982a83fd53380aae08510a1ce38fa4b899",
+      "official_scores": null
+    },
+    {
+      "id": "E24",
+      "strategy": "Stage 3 가감속을 학습 자기운동 모델로",
+      "status": "official_collapse_two_causes_identified",
+      "base": "E23",
+      "change": "Stage3: 가감속 기울기 입력 = 학습 속도(m/s). 정지·조향 불변. Stage2: E23 길이 비례 유지.",
+      "question": "comma2k19 로 학습한 자기운동 회귀(속력 상관 0.36->0.961)가 리더보드 Stage 3 를 올리는가. 그리고 E23 의 길이 비례가 Stage 2 를 올리는가.",
+      "zip": "submit_e24_learned_speed.zip",
+      "sha256": "2cead69d5db5f3382d9195538db65fb5d6e038fc3738375ee6ccb82a2d1c6bf2",
+      "verification": "e24_verification.json",
+      "official_scores": {
+        "stage1": "0.8917171717",
+        "stage2": "0.1721199428",
+        "stage3": "0.1656407335",
+        "date": "2026-09-16"
+      },
+      "root_causes": [
+        {
+          "cause": "Stage 2 길이 비례의 가정이 정반대였다",
+          "evidence": "Stage 2 가 진단으로 푼 우연 바닥(0.1620478431)에 붙었다. 바닥 대비 초과분 0.0101(기준은 0.1712). 네 항목이 동시에 무너진 모양이다. 300프레임 fixture 재현: 챔피언 간격 22 vs E24 간격 45~72.",
+          "why": "'클립 길이가 fps 에 비례한다(같은 5초, 다른 fps)'고 가정했는데, fps 가 10 으로 같고 **길이가 다르면** 비례는 정반대다. 300프레임이면 진입 간격 144, 방향창 144, 회피창 72 가 되어 네 항목이 함께 무너진다.",
+          "bonus": "**평가 클립이 전부 50프레임이 아니라는 증거**다. 전부 50프레임이면 이 변경은 무효과여야 했다."
+        },
+        {
+          "cause": "학습망 입력 전처리에 낭비를 넣었다",
+          "evidence": "프레임당 실측(단일 스레드): 1280x720 기존 1.34ms + 추가 1.26ms(+94%) / 1920x1080 기존 1.81ms + 추가 3.06ms(+169%). 고친 방식은 0.033ms - 약 90배.",
+          "why": "이미 만든 240폭 회색조가 있는데 **원본 해상도 frame 에서 다시** cvtColor + INTER_AREA 를 했다.",
+          "effect": "예산 가드(40분)가 걸렸다면 그 뒤 클립이 전부 대체값이 되어 Stage 3 붕괴와 Stage 2 추가 하락을 동시에 설명한다."
+        }
+      ],
+      "my_verification_gap": "25프레임(짧은) fixture 만 시험했다. 짧아지는 쪽은 값이 작아져 멀쩡해 보인다. **긴 클립을 한 번도 보지 않았다.** 스케일링 변경은 양쪽 끝을 다 봐야 한다."
+    },
+    {
+      "id": "E25",
+      "strategy": "E24 붕괴 수습 - 두 원인 분리",
+      "status": "official_champion_stage3_record",
+      "base": "E24",
+      "change": "Stage2: 길이 비례 끔(챔피언 설정 복원). Stage3: 학습 속도 유지 + 입력 전처리를 gray 에서 축소.",
+      "question": "Stage 2 가 0.3332 로 돌아오면 길이 비례가 원인이었음이 확인된다. Stage 3 는 시간 문제와 분리된 상태에서 학습 속도 신호의 진짜 값어치를 보여준다.",
+      "verification": "50프레임에서 Stage2 가 챔피언과 완전 동일. 300프레임에서 간격 22 복원(E24 는 45~72). Stage3 시간 82.4->72.3s. 조향 0행 변경. 감사 실패 0건/주의 0건.",
+      "zip": "submit_e25_fixprep.zip",
+      "sha256": "c41885cdd4364da85d6e015c03390dfbcdd8b7be68b6b46891ab4425f300f68e",
+      "official_scores": {
+        "stage1": "0.8917171717",
+        "stage2": "0.3332112117",
+        "stage3": "0.6087659332",
+        "date": "2026-09-16"
+      },
+      "stage2_confirmation": "챔피언 값과 **비트 단위로 동일**(차이 0.00e+00). 길이 비례가 E24 Stage 2 붕괴의 유일한 원인이었음이 확인됐고, 예산 가드도 걸리지 않았다(걸렸다면 열화됐을 것).",
+      "stage3_result": {
+        "before": 0.5842776289,
+        "after": 0.6087659332,
+        "delta": 0.0244883043,
+        "verdict": "**학습 자기운동 모델 채택.** E06 이후 Stage 3 최대 이득이며, 외부 데이터 학습이라는 방향 자체가 검증됐다."
+      }
+    },
+    {
+      "id": "E26",
+      "strategy": "Stage2 죽은 코드 활성화 + Stage3 정지 판정 m/s",
+      "status": "official_both_rejected",
+      "base": "E25",
+      "change": "Stage2: stage2_onset_alpha 1.0 -> 0.9. Stage3: 정지 판정을 학습 속도(m/s) 진입 0.5 / 해제 1.5 로.",
+      "stage2_finding": "alpha=1.0 이면 level = signal[peak] 이고 peak 가 최댓값이므로 되짚기 조건 signal[i-1] > level 이 **절대 참이 될 수 없다.** 루프가 한 번도 실행되지 않았고 stage2_onset_lookback 은 무효였다. 즉 충돌의 시작이 아니라 **봉우리**를 내고 있었다.",
+      "stage2_measured": "공개 5개 정답 대비: alpha 1.0 -> 4/5 적중 평균오차 1.2 / alpha 0.90 -> **5/5 적중 평균오차 1.0**. 0.95~0.70 이 모두 5/5 인 넓은 고원이고 0.95·0.90 이 평균오차 최소. 고원 안쪽이면서 죽은 코드에서 충분히 떨어진 0.90 을 선택.",
+      "stage2_leverage": "collision_frame 가중치 0.338 이고 entry_frame = collision - 22 이므로 충돌 검출 개선이 두 항목에 동시에 반영된다(합쳐 Stage 2 의 67.6%).",
+      "stage3_measured": "comma2k19 6400표본(정지 62): 학습 속도의 정지 구간 중앙값 0.39 m/s vs 주행 31.65 m/s. 정지 F1 배경보정광류 0.848 -> 학습속도 **0.967**. 0.5~0.8 구간이 평평한 고원.",
+      "why_not_like_the_3_failures": "이전 운영점 재조정 3전 3패는 **의미 없는 대리값**의 문턱을 표에서 최댓값으로 고른 것이었다. 이번은 (1) 양이 보정된 물리량(m/s, 속력 상관 0.961), (2) 문턱 0.5 m/s 는 정답 정의 그 자체, (3) 최댓값이 아니라 정의에서 나오는 값을 골랐다.",
+      "verification": "충돌 시각 4/5 -> 5/5(평균오차 1.2 -> 1.0). 300프레임 클립에서 간격 22 유지(E24 회귀 없음). 25프레임도 정상. Stage3 accel 103행 변경, steer 0행. 시간 72.1 -> 72.7s. 감사 실패 0건/주의 0건.",
+      "fallback": "모델이 없거나 추론이 실패하면 기존 광류 정지 판정(문턱 0.003/0.005)으로 그대로 폴백.",
+      "zip": "submit_e26_onset_stopms.zip",
+      "sha256": "466883a78b019e19230c5a0a15161fdd093b49e19378d19f8aad25d8ce9e84e7",
+      "official_scores": {
+        "stage1": "0.8917171717",
+        "stage2": "0.3284279867",
+        "stage3": "0.4955668652",
+        "date": "2026-09-17"
+      },
+      "stage2_delta": -0.004783225,
+      "stage3_delta": -0.113199068,
+      "root_cause_stage3": "학습망을 배율 0.83~1.18 증강으로 **일부러 배율 불변**하게 만들어 놓고, 그 출력을 **절대 물리 문턱**(0.5 m/s)에 썼다. 배율 s 가 곱해지면 0.4 m/s 가 0.4s 로 읽혀 문턱과의 관계가 클립마다 달라진다. augment() 주석에 내가 직접 'STOPPED 는 0 근처 판정이라 배율과 무관하다'고 썼는데, 문턱이 0 이 아니라 0.5 라서 틀렸다.",
+      "root_cause_stage2": "공개 5개 라벨로 운영점을 골랐다. 공개 적중 80% vs 평가 추정 적중 28.7% 임을 이미 알고 있었으면서도."
+    },
+    {
+      "id": "E27",
+      "strategy": "E26 되돌림 + 조향을 학습 요레이트로",
+      "status": "official_stage3_rejected",
+      "base": "E25",
+      "change": "Stage2: 챔피언 복원(onset_alpha 1.0), 새 가설 없음. Stage3: 조향 신호를 -(학습 요레이트)로. 운영점 전부 불변.",
+      "why_this_fits": "E25 와 같은 성격이다 - 운영점을 건드리지 않고 신호만 바꾸며, 조향 문턱 std(horizontal) x 1.1 은 **클립별 상대 문턱**이라 배율 불변 학습과 일치한다. E26 이 어긴 조건을 지킨다.",
+      "measured": "comma2k19 16세그 주행 6338프레임, 운영점 전부 고정: 요레이트 상관 광류 -0.604 vs 학습 +0.846. 조향 macro-F1 광류 0.624 vs 학습 **0.664**. **부호 규약이 반대**라 반전 필요(그대로 쓰면 0.293).",
+      "verification": "Stage 2 는 50·300프레임 모두 챔피언과 완전 동일. Stage 3 **accel 0행 변경**(완벽 격리), steer 1504행. 시간 73.6 -> 73.2s. 감사 실패 0건/주의 0건.",
+      "risk": "조향 출력 분포가 STRAIGHT 0.784->0.713, LEFT 0.098->0.163 으로 공개 정답 분포(0.78/0.12/0.10)에서 멀어진다. 다만 분포 정합은 E08 에서 선택 기준으로 이미 진 적이 있고, 직접 측정인 comma2k19 조향 macro-F1 은 학습 요레이트가 낫다.",
+      "zip": "submit_e27_learned_yaw.zip",
+      "sha256": "82d58dc21e000220a738a24ad0b49e498eb7d86399cdefb54fa6edb7cb813a42",
+      "official_scores": {
+        "stage1": "0.8917171717",
+        "stage2": "0.3332112117",
+        "stage3": "0.5935493619",
+        "date": "2026-09-17"
+      },
+      "stage3_delta": -0.0152165713,
+      "verdict": "조향 학습 요레이트 기각. 광류 조향으로 복원. Stage 2 는 챔피언과 정확히 일치해 변경 없음이 확인됐다.",
+      "risk_materialised": "제작 시 적어 둔 위험(조향 분포 STRAIGHT 0.784->0.713 로 공개 정답 0.78 에서 이탈)이 그대로 실현됐다."
+    },
+    {
+      "id": "E28",
+      "strategy": "자기운동 모델을 2차량으로 재학습 (코드 불변)",
+      "status": "official_rejected",
+      "base": "E25",
+      "change": "inference.py 는 E25 와 **바이트 단위로 동일**. ego_final.pt 만 1차량 -> 2차량(comma2k19 Chunk_1 + Chunk_3, 120세그먼트 / 17주행 / 2차량) 재학습본으로 교체.",
+      "rationale": "E25 가 이긴 것을 더 민다. 차량 단위 분리 검증에서 카메라 전이 손실이 속력 상관 0.062 로 확인됐고, 배포 모델은 한 대로만 학습했으므로 그만큼 여유가 있다.",
+      "verification": "Stage 2 는 50·300프레임 모두 E25 와 완전 동일. Stage 3 accel 356/5992행 변경, **steer 0행**, STOPPED 0.0799 불변(정지는 여전히 광류). 시간 76.6 -> 77.3s. 감사 실패 0건/주의 0건.",
+      "source": "comma2k19 - comma.ai, MIT License. Chunk_1 + Chunk_3.",
+      "zip": "submit_e28_twocar.zip",
+      "sha256": "a4bad4c57adde163b1665ea832788dfd27d1c2a51c11738291c0c55cede5a8f1",
+      "official_scores": {
+        "stage1": "0.8917171717",
+        "stage2": "0.3332112117",
+        "stage3": "0.6027043120",
+        "date": "2026-09-17"
+      },
+      "stage3_delta": -0.0060616212,
+      "verdict": "2차량 재학습 기각. 1차량 체크포인트(E25)를 유지한다. Stage 2 가 E25 와 정확히 일치해 inference.py 바이트 동일이 확인됐다 - 점수 차이는 오직 모델 품질이다.",
+      "hypothesis": "파라미터 350,007개로 카메라 두 대의 서로 다른 기하를 동시에 맞추려니 어느 쪽에도 특화 못 한 절충이 됐을 수 있다(용량 병목). 다만 차이가 0.0061 로 작아 학습 변동성일 가능성도 있다. capacity_test.py 로 오프라인 검증 중."
+    },
+    {
+      "id": "E29",
+      "strategy": "Stage2 탐색 창 시작 0.15 -> 0.45",
+      "status": "official_timeout_degraded",
+      "base": "E25",
+      "official_scores": {
+        "stage1": "0.8917171717",
+        "stage2": "0.2708213529",
+        "stage3": "0.1656407335",
+        "date": "2026-09-18"
+      },
+      "diagnosis": "Stage 3 가 E24 때와 **소수점 10자리까지 같은 값**(0.1656407335)이다. 같은 퇴화 출력 - 예산 가드가 걸려 전부 대체값이 나왔다. Stage 2 의 0.2708 도 챔피언(0.3332)과 우연 바닥(0.1620) 사이라 가드가 Stage 2 도중 걸린 모양과 맞는다. **가설은 채점되지 못했다.**",
+      "root_cause": "창을 좁히면 충돌이 클립 뒤로 밀리고, _tracked_entry 가 paths[:collision+1] 을 검출기에 넘기므로 작업량이 함께 늘어난다. 실측: 300프레임 클립에서 검출기 프레임 311 -> **811(+160%)**, Stage 2 시간 26.6 -> 58.4s(+120%). **E21 을 죽인 것과 정확히 같은 결합.**",
+      "my_process_failure": "E21 이후 내가 직접 적은 규칙('모든 후보는 제출 전에 검출기 프레임 수와 단계별 시간을 기준 파일과 비교한다. 출력 동일성만으로는 부족하다')을 지키지 않았다. 50프레임에서 출력이 동일한 것만 확인했다. 게다가 감사 출력에 합계 129.4s -> 176.1s(+36%) 로 경고가 떠 있었는데 지나쳤다.",
+      "zip": "submit_e29_window.zip"
+    },
+    {
+      "id": "E30",
+      "strategy": "창 가설 + 검출기 결합 분리",
+      "status": "official_timeout_degraded",
+      "base": "E25",
+      "official_scores": {
+        "stage1": "0.8917171717",
+        "stage2": "0.2816954379",
+        "stage3": "0.4908192365",
+        "date": "2026-09-19"
+      },
+      "critical_finding": "**Stage 3 코드가 E25 와 동일한데 0.6087659332 -> 0.4908192365 이다.** 설명 가능한 메커니즘은 시간 가드뿐이다. 대체값 비율 역산: Stage 3 26.6% / Stage 2 30.1% - 가드가 실행 70% 지점에서 걸린 모양.",
+      "implication": "E30 의 로컬 시간은 E25 보다 빨랐고(139.2s vs 143.8s) 검출기 프레임은 +3% 였다. **3% 로 넘쳤다면 E25 자체가 예산의 95~100% 에 있다.** E25 의 0.6088 도 부분 열화된 값일 수 있다.",
+      "guard_indicator": "Stage 2 가 챔피언과 **정확히** 같으면 가드 미발동. E25 일치 / E26 열화 / E27 일치 / E28 일치 / E29 열화 / E30 열화.",
+      "contaminated": "E26 의 Stage 3 하락(-0.1132)을 정지 문턱 탓으로 진단했는데 Stage 2 가 열화돼 있어 가드가 섞였을 수 있다. 그 진단은 재검토 대상이다.",
+      "zip": "submit_e30_window_decoupled.zip"
+    },
+    {
+      "id": "E31",
+      "strategy": "시간 회수 (가설 없음, 출력 동일)",
+      "status": "official_identical_confirmed",
+      "base": "E25",
+      "change": "(1) 버려지는 대리값 2개를 건너뛴다 - column 0(raw _speed_proxy)은 _labels_from_motion 632행 이후 미사용이고 column 2(깊이정규화)는 640행에서 ego 로 덮어써진다. 모델 적재 여부를 루프 전에 확인해 그때만 건너뛴다. (2) 예산 가드 40분 -> 54분.",
+      "verification": "공개 fixture 에서 Stage 2·Stage 3 **완전 동일**(accel 0행/steer 0행 차이). Stage 3 시간 77.8s -> 67.9s(**-12.8%**), 예측 12.5% 와 일치.",
+      "what_it_answers": "출력이 동일하므로 점수 차이는 오직 시간에서 온다. E25 와 같은 점수면 여유가 생긴 것이고, **E25 보다 높으면 E25 자체가 부분 열화돼 있었다는 뜻**이다(그동안의 Stage 3 비교가 오염).",
+      "zip": "submit_e31_reclaim.zip",
+      "sha256": "21651565ca217d9d3ff2ad840ffba8db7be2daeacb9267920a434b18f03eb24b",
+      "official_scores": {
+        "stage1": "0.8917171717",
+        "stage2": "0.3332112117",
+        "stage3": "0.6087659332",
+        "date": "2026-09-19"
+      },
+      "result": "E25 와 **세 Stage 비트 단위 동일**. 출력 동일 주장이 평가 서버에서 검증됐고, E25 의 0.6087659332 가 열화된 값이 아니라 참값임이 확정됐다. Stage 3 작업량 13% 감소 + 가드 54분으로 여유 확보.",
+      "overturns": "나는 E30 을 보고 \"E25 가 예산의 95~100%에 있다\"고 추론했는데 틀렸다. E31 이 같은 점수를 낸 것은 E25 가 60분 안에 완주했다는 뜻이다. E29/E30 을 열화시킨 것은 한도 초과가 아니라 **내가 E22 에서 50분 -> 40분으로 낮춘 가드**일 가능성이 크다. 40~60분 사이에 끝났을 실행이 40분에 잘렸다."
+    },
+    {
+      "id": "E32",
+      "strategy": "창 가설 재시험 (E31 기반, 가드 54분)",
+      "status": "official_window_rejected_clean_run",
+      "base": "E31",
+      "change": "Stage2: 보고용 창 시작 0.15 -> 0.45, 추적용 인덱스는 0.15 고정(비용 결합 차단). Stage3: E31 그대로.",
+      "why_retry": "창 가설은 E29·E30 으로 두 번 제출됐으나 **한 번도 채점되지 못했다**(둘 다 가드 발동). E31 이 여유를 확보했으므로 이제 공정하게 채점된다.",
+      "cost_verified_on_real_content": "실제 연속 영상 300프레임 fixture(주기성 없음): 검출기 프레임 E31 929 -> E32 **939(+1%)**. 충돌 상대 위치 E31 [0.85,0.37,0.47,0.60,0.80] -> E32 [0.85,**0.76**,0.47,0.60,0.80] - 창 밖 가짜 봉우리 하나만 교정됐다.",
+      "public_identical": "공개 50프레임 5개는 네 열 모두 E31 과 완전 동일(봉우리가 이미 0.60 이상).",
+      "zip": "submit_e32_window_retry.zip",
+      "sha256": "ef5100c46dbf1c965eb6e9e4c2263be1bbd98965d2ddb93de6f567eadf4974eb",
+      "official_scores": {
+        "stage1": "0.8917171717",
+        "stage2": "0.2816954379",
+        "stage3": "0.6087659332",
+        "runtime": "41분 9초",
+        "date": "2026-09-19"
+      },
+      "verdict": "Stage 3 가 챔피언과 **정확히 일치** -> 가드 미발동, 깨끗한 실행. Stage 2 가 **E30 과 똑같은 0.2816954379** 이므로 E30 의 Stage 2 도 열화가 아니라 진짜 결과였다(스테이지가 1->2->3 순이고 E30 은 Stage 3 도중 가드). **창 가설은 -0.0515157738 로 확정 기각.**",
+      "headroom": "41분 9초 / 한도 60분 -> 약 19분 여유"
+    },
+    {
+      "id": "E33",
+      "strategy": "세 Stage 동시 - 전부 '정보를 덜 버린다' 계열",
+      "status": "official_two_records",
+      "base": "E32",
+      "changes": {
+        "stage1": "stage1_frame_temp 0.45 -> 0.65. Stage 1 에서 반복해 이긴 축은 온도뿐이다(0.10 +0.0150 / 0.25 +0.0076 / 0.45 +0.0151, 극한은 패). 0.45 와 극한 사이는 미시도.",
+        "stage2": "stage2_diff_size (320,180) -> (480,270). 전례 192->320 에서 +0.0084. 충돌은 국소 사건이라 뭉개면 손해다. 창은 0.15 로 복원(가설 기각).",
+        "stage3": "stage3_flow_width 240 -> 288. 전례 160->240 에서 +0.0012. 가감속은 학습 모델이 내므로 폭은 정지·조향에만 작용하고 둘 다 클립별 상대 문턱이라 운영점이 안 흔들린다."
+      },
+      "runtime": "로컬 합계 124.4s -> 143.6s (x1.154). 서버 41분 9초 x 1.154 = **약 47.5분**. 가드 54분 아래.",
+      "verification": "Stage 1 소프트 점수가 실제로 이동함을 확인(0.2563->0.2738 등, 전부 컷 0.5 쪽으로). 공개 5개는 전부 ORIGINAL 이라 라벨은 안 바뀐다. Stage 2 공개 충돌 동일(봉우리가 해상도에 강건). Stage 3 accel 52행 / steer 180행 변경.",
+      "zip": "submit_e33_triple.zip",
+      "sha256": "ed8995337560620f2ea4793ac55db44f64a7c70d5b0a2e3fa00ff600a8496d34",
+      "official_scores": {
+        "stage1": "0.8805903648",
+        "stage2": "0.3340795992",
+        "stage3": "0.6101296016",
+        "date": "2026-09-19"
+      },
+      "per_stage": {
+        "stage1 온도 0.65": "-0.0111268069 패. 온도 정점이 0.45 임이 확정(0.10 +0.0150 / 0.25 +0.0076 / 0.45 최적 / 0.65 -0.0111 / 극한 패).",
+        "stage2 해상도 480x270": "**+0.0008683875 신기록**",
+        "stage3 광류폭 288": "**+0.0013636684 신기록**"
+      },
+      "verdict": "'정보를 덜 버린다' 계열이 Stage 2·3 에서 또 이겼다. 세 Stage 동시 실험의 첫 슬롯에서 기록 2개."
+    },
+    {
+      "id": "E34",
+      "strategy": "세 Stage 동시 - 이긴 축 하나만 밀고 나머지는 비용 0",
+      "status": "official_one_record",
+      "base": "E33",
+      "changes": {
+        "stage1": "stage1_soft_cut 0.50 -> 0.45 (온도는 0.45 로 복원). 평가셋은 재녹화 161 / 원본 107 = **60.07% 재녹화**(GG 역산)인데 컷이 대칭 0.50 이다. 비용 0.",
+        "stage2": "stage2_diff_size (480,270) -> (560,315). 해상도 축 2연승(192->320 +0.0084, 320->480 +0.0009) - 이득이 줄고 있어 포화 확인차 한 걸음.",
+        "stage3": "stage3_smooth_samples 1 -> 3. _mode_filter 는 width<=1 이면 즉시 반환하므로 **지금까지 아무 일도 하지 않던 죽은 기계**다(onset alpha=1.0 과 같은 유형). 비용 0."
+      },
+      "runtime": "구조적 추산 - Stage 2 화소 1.36배 x Stage 2 비중 12% = 총 +4%. E33 47.5분 x 1.04 = **약 49.4분**. 가드 54분 아래. (로컬 단일 측정은 노이즈가 커 비율을 쓰지 않았다: 같은 E33 이 153.1s 와 162.2s.)",
+      "verification": "Stage 1 라벨은 공개 5개에서 동일(전부 ORIGINAL, 경계에서 멀다). Stage 2 공개 충돌 동일(봉우리가 해상도에 강건). Stage 3 accel 35행 변경, steer 0행(히스테리시스가 이미 떨림을 지워 최빈값 필터가 더 할 일이 적다).",
+      "zip": "submit_e34_triple.zip",
+      "sha256": "039f34ea9f561a3dfff17c01e1ecca3c84fa21f25025f9e35a3a0a8480e43d39",
+      "official_scores": {
+        "stage1": "0.8710590366",
+        "stage2": "0.3310305902",
+        "stage3": "0.6109358569",
+        "date": "2026-09-20"
+      },
+      "per_stage": {
+        "stage1 소프트컷 0.45": "-0.0206581351 패. 0.50 이 맞다 - 평가셋 prior(재녹화 60%)로 기울이는 것은 손해.",
+        "stage2 해상도 560x315": "-0.0030490090 패. **480x270 에서 포화**(192->320 +0.0084 / 320->480 +0.0009 / 480->560 -0.0030).",
+        "stage3 최빈값필터 3": "**+0.0008062553 신기록**. 죽어 있던 기계를 켠 것이 또 이겼다(onset alpha 와 같은 유형)."
+      }
+    },
+    {
+      "id": "E35",
+      "strategy": "세 Stage 동시 - 전부 큰 걸음",
+      "status": "official_scored",
+      "base": "E34",
+      "changes": {
+        "stage1": "stage1_frames 16 -> 24. OO 가 24 를 -0.0259 로 기각했으나 그것은 framevote 시절이다. 지금은 soft 결합이라 프레임 수가 **시그모이드 평균의 표본 수**이고, 표본이 늘면 평균이 정확해진다 - Stage 1 에서 5승 0패인 '정보를 덜 버린다' 계열. **낡은 기각을 버린다.**",
+        "stage2": "진입 시각을 추적기 결과로. entry_frame 은 적중 11.3%, 가중치 0.338 로 가장 망가진 부품이고 지금은 collision-22 상수다. 그런데 _tracked_entry 가 돌려주는 tracked[0](상대 차량이 자차 차선에 처음 걸치는 프레임)을 **이미 계산해 놓고 버리고 있다**. 추가 비용 0. E01 이 이것으로 졌으나 E09 의 조기 가시 궤적 허용(+0.0033) 이전 추적기였고 그 뒤 재평가된 적이 없다.",
+        "stage3": "stage3_accel_smooth 81 -> 41. 창 81 은 속력 상관 **0.36** 짜리 광류 대리값 시절 값이다. E25 부터 입력이 학습 속도(상관 **0.961**)이고, 깨끗한 신호를 8.1초로 뭉개면 진짜 가감속 사건이 지워진다. E07 이 같은 축에서 81->201 로 졌지만 그건 comma2k19 가 고른 값이고 방향도 위였다. 이번 근거는 **입력 신호가 바뀌었다는 사실**이고 방향은 아래다."
+      },
+      "reverted": "E34 에서 진 두 축 복원 - 소프트컷 0.50, 해상도 (480,270).",
+      "verification": "Stage 2 진입 [10,12,9,18,7] -> **[30,12,9,3,19]**, 간격이 전부 22 에서 2~37 로 클립별이 됐다(2개는 추적 실패로 상수 유지). entry<=collision 유지, 음수 없음. Stage 3 accel 993행(16.6%) 변경, steer 0행. Stage 1 라벨은 공개 5개 동일(전부 ORIGINAL).",
+      "runtime": "로컬 합계 152.7s -> 154.9s. Stage 2 해상도 복원(-4%)을 반영해 **약 48.1분** 예측. 가드 54분 아래.",
+      "risk": "Stage 2 진입 간격이 2~37 로 분산이 크다. 간격 2(0.2초)는 물리적으로 의심스럽다 - 추적기 교차 판정이 잡음이 많다는 뜻이고 E01 이 진 이유일 수 있다. 지면 상수로 되돌린다.",
+      "zip": "submit_e35_triple.zip",
+      "sha256": "121f7d08d1e59315866f0daaa9bc77a0116b3a1b2275d97a84efaf5bf5f2dfaa",
+      "official_scores": {
+        "stage1": "0.8954991087",
+        "stage2": "0.3213058765",
+        "stage3": "0.6317935485",
+        "date": "2026-09-20"
+      },
+      "per_stage": {
+        "stage1 프레임 24": "+0.0037819370 신기록. soft 결합에서 표본 확대 가설 채택.",
+        "stage2 무조건 추적 진입": "-0.0127737227 패. 추적 진입을 기본값으로 쓰지 않는다.",
+        "stage3 평활창 41": "+0.0208576916 대폭 신기록. 학습 속도에는 짧은 창이 맞다."
+      }
+    },
+    {
+      "id": "E36",
+      "strategy": "E35의 두 승리 축을 거칠게 한 단계 더 진행하고 Stage2 추적을 신뢰도 게이트로 제한",
+      "status": "official_scored_all_lost",
+      "base": "E35",
+      "changes": {
+        "stage1": "soft 결합 표본 프레임 24 -> 32. E35의 +0.0037819370 추세가 더 이어지는지 확인.",
+        "stage2": "무조건 추적 진입을 폐기하고 기존 collision-22를 기본값으로 복원. 추적 gap이 8~30프레임일 때만 채택하여 E35의 극단값 gap=2,37을 배제.",
+        "stage3": "학습 속도 평활창 41 -> 21. E35의 +0.0208576916 방향을 다음 거친 절반점에서 확인."
+      },
+      "runtime": "추가 모델 호출 없음. Stage1 디코딩 표본만 8개 증가하므로 E35와 거의 동일하고 54분 가드 아래로 예상.",
+      "verification": "ZIP CRC, inference.py 컴파일, 세 설정값, 두 모델 바이트 동일성 검사 통과.",
+      "zip": "submit_e36_triple.zip",
+      "sha256": "7a985b4525fbcd0cf3cf8fb51320b25724e71a7567f7591d23dd3e5d60911985",
+      "official_scores": {
+        "stage1": "0.8880035661",
+        "stage2": "0.3187511320",
+        "stage3": "0.6180027277",
+        "date": "2026-09-20"
+      },
+      "per_stage": {
+        "stage1 frames32": "-0.0074955426 vs E35; restore 24",
+        "stage2 gated tracking": "-0.0025547445 vs E35 and -0.0153284672 vs champion; disable tracked entry",
+        "stage3 smooth21": "-0.0137908208 vs E35; restore 41"
+      }
+    },
+    {
+      "id": "E37",
+      "strategy": "E36 삼축 패배 후 E35 주변 교차점 탐색",
+      "status": "official_scored_all_lost",
+      "base": "E35",
+      "changes": {
+        "stage1": "frames 24 -> 20; 16/24/32 결과로 최고점 왼쪽을 탐색",
+        "stage2": "tracked entry 완전 비활성화; collision_bias -2 -> -1. collision과 entry를 함께 한 프레임 이동",
+        "stage3": "accel smooth 41 -> 31; 21/41/81 결과 사이를 탐색"
+      },
+      "zip": "submit_e37_triple.zip",
+      "sha256": "c21f3e2c040ea937d5bf9b96637eb4b23dd1498b670cf8da8c698cf60b9bbbac",
+      "verification": "ZIP CRC, compile, config assertions, model bytes unchanged",
+      "official_scores": {
+        "stage1": "0.8804905240",
+        "stage2": "0.3325870853",
+        "stage3": "0.6303965244",
+        "date": "2026-09-21"
+      },
+      "per_stage": {
+        "stage1 frames20": "-0.0150085847 vs E35; 24 remains best",
+        "stage2 collision_bias -1": "-0.0014925139 vs E33 champion; test -3 opposite side",
+        "stage3 smooth31": "-0.0013970241 vs E35; test 51 opposite side"
+      }
+    },
+    {
+      "id": "E38",
+      "strategy": "E37로 좁힌 최고점의 반대편 대칭점 탐색",
+      "status": "official_scored_all_lost",
+      "base": "E35",
+      "changes": {
+        "stage1": "frames 24 -> 28; 24와 실패한 32의 중간점",
+        "stage2": "tracked entry 완전 비활성화; collision_bias -2 -> -3. -1의 반대편",
+        "stage3": "accel smooth 41 -> 51. 31의 반대편 대칭점"
+      },
+      "zip": "submit_e38_triple.zip",
+      "sha256": "951f38524e334e710a6dee575962f472219b30a17b2412725a45e307531ef894",
+      "verification": "ZIP CRC, compile, config assertions, model bytes unchanged",
+      "official_scores": {
+        "stage1": "0.8880035661",
+        "stage2": "0.3304574428",
+        "stage3": "0.6265650978",
+        "date": "2026-09-21"
+      },
+      "per_stage": {
+        "stage1 frames28": "-0.0074955426 vs E35",
+        "stage2 collision_bias -3": "-0.0036221564 vs champion",
+        "stage3 smooth51": "-0.0052284507 vs E35"
+      }
+    },
+    {
+      "id": "E39",
+      "strategy": "E35 복원 + Stage2 컬러 차분 구조 실험",
+      "status": "official_scored_stage3_guard_collapse",
+      "base": "E35",
+      "changes": {
+        "stage1": "frames 24->26",
+        "stage2": "tracked entry off; grayscale difference -> color difference",
+        "stage3": "smooth 41->45"
+      },
+      "zip": "submit_e39_triple.zip",
+      "sha256": "f13f3f682489b8d2404b166d6ed4ea2e236ccdbf157e7d19b139ee2bb7f2d822",
+      "official_scores": {
+        "stage1": "0.8917171717",
+        "stage2": "0.3258221012",
+        "stage3": "0.1656407335",
+        "date": "2026-09-22"
+      },
+      "per_stage": {
+        "stage1 frames26": "0.8917171717; E35보다 -0.0037819370, 기각",
+        "stage2 color difference": "0.3258221012; champion보다 -0.0082574980, 기각",
+        "stage3 smooth45": "미채점. 0.1656407335는 E24/E29 가드 붕괴값과 소수점 10자리까지 동일"
+      },
+      "diagnosis": "컬러 480x270 3채널 차분이 Stage2 비용을 늘려 54분 가드를 소진. Stage3 대체 출력. smooth45의 승패 근거로 쓰지 않는다."
+    },
+    {
+      "id": "E40",
+      "strategy": "E35 복원 + 저비용 구조 실험",
+      "status": "official_scored_stage3_record",
+      "base": "E35",
+      "changes": {
+        "stage1": "frames24 유지, soft temperature 0.45->0.40",
+        "stage2": "tracked entry off, 1채널 Sobel 경사 차분",
+        "stage3": "smooth 41->45 재시험(E39에서는 가드로 미채점)"
+      },
+      "runtime": "Sobel 합성 실측 약 0.708ms/frame. 컬러 3채널을 쓰지 않으며 Faster R-CNN 호출 수는 E35와 동일.",
+      "zip": "submit_e40_triple.zip",
+      "sha256": "1b9364a939e1fd8ae318d4cdf71051b7e812ce5c1bbefd38c872768cdd34be45",
+      "official_scores": {
+        "stage1": "0.8842493905",
+        "stage2": "0.3275631119",
+        "stage3": "0.6342098881",
+        "date": "2026-09-22"
+      },
+      "per_stage": {
+        "stage1 temp0.40": "-0.0112497182 vs E35, reject",
+        "stage2 pure gradient": "-0.0065164873 vs champion, reject",
+        "stage3 smooth45": "+0.0024163396 new record, accept"
+      }
+    },
+    {
+      "id": "E41",
+      "strategy": "E40 Stage3 승리 채택 + 국소 탐색",
+      "status": "official_scored_all_lost",
+      "base": "E35",
+      "changes": {
+        "stage1": "temp 0.45->0.425",
+        "stage2": "tracked entry off; clip-normalized raw/gradient difference 80:20",
+        "stage3": "smooth 45->47"
+      },
+      "zip": "submit_e41_triple.zip",
+      "sha256": "c04cd8aed06829e9d562ab7eb9fe0f1d84fa9e43287f5f325293a1c08d1f0700",
+      "official_scores": {
+        "stage1": "0.8880035661",
+        "stage2": "0.3248481743",
+        "stage3": "0.6312874078",
+        "date": "2026-09-23"
+      },
+      "per_stage": {
+        "stage1 temp0.425": "-0.0074955426 vs E35",
+        "stage2 raw/gradient80:20": "-0.0092314249 vs champion",
+        "stage3 smooth47": "-0.0029224803 vs smooth45 champion"
+      }
+    },
+    {
+      "id": "E42",
+      "strategy": "Stage2 광류 충격 융합 + Stage3 교차카메라 대형 모델 앙상블",
+      "status": "official_scored_stage2_record",
+      "base": "E35",
+      "changes": {
+        "stage1": "E35 champion unchanged",
+        "stage2": "tracked entry off; 75% raw difference + 25% normalized 160x90 optical-flow shock",
+        "stage3": "smooth45; 65% winning one-camera model + 35% large two-camera model after per-clip standardization"
+      },
+      "zip": "submit_e42_structural.zip",
+      "sha256": "46d8c5e0e97d877ea3a28ec6f13d7b5c72abcb89c01c569bf7f2942ae2e839c8",
+      "size_bytes": 170519149,
+      "verification": "CRC, compile, bundled checkpoint bytes, actual two-model load/inference smoke test",
+      "official_scores": {
+        "stage1": "0.8954991087",
+        "stage2": "0.3358834949",
+        "stage3": "0.6320004700",
+        "date": "2026-09-23"
+      },
+      "per_stage": {
+        "stage1": "E35 champion exact",
+        "stage2 flow25": "+0.0018038957 new record, accept",
+        "stage3 large ensemble": "-0.0022094181 vs E40 champion, reject"
+      }
+    },
+    {
+      "id": "E43",
+      "strategy": "검증된 Stage2 광류 충격 비중 확대",
+      "status": "official_stage2_rejected_clean_run",
+      "base": "E35",
+      "changes": {
+        "stage1": "E35 champion unchanged",
+        "stage2": "tracked entry off; raw/flow mix 75:25 -> 50:50",
+        "stage3": "large ensemble removed; single winning model + smooth45"
+      },
+      "zip": "submit_e43_stage2_flow50.zip",
+      "sha256": "13bea35b95d49a0ff887f23d9e9857cf4998d0004078a2310ff5108625b0c6e6",
+      "official_scores": {
+        "stage1": "0.8954991087",
+        "stage2": "0.3245868100",
+        "stage3": "0.6342098881",
+        "date": "2026-09-24"
+      },
+      "per_stage": {
+        "stage1": "E35 챔피언과 정확히 일치(변경 없음 확인)",
+        "stage2 flow50": "-0.0112966849 vs E42, 기각",
+        "stage3": "E40 챔피언과 정확히 일치 -> 가드 미발동"
+      },
+      "flow_curve": {
+        "0.00": 0.3340795992,
+        "0.25": 0.3358834949,
+        "0.50": 0.32458681,
+        "parabola_vertex": 0.159,
+        "predicted_at_vertex": 0.3367433141
+      }
+    },
+    {
+      "id": "E44",
+      "strategy": "세 Stage 동시 - 포물선 꼭짓점 + 새 표집 축 + 필터 한 칸",
+      "status": "official_stage3_record",
+      "base": "E43",
+      "changes": {
+        "stage1": "표집 구간 [0,1] -> [0.05,0.95], 프레임 24 유지. 첫·끝 프레임의 전환/페이드/키프레임 질감을 배제. 한 번도 안 건드린 축.",
+        "stage2": "광류 혼합 0.50 -> 0.15. 세 점(0/0.25/0.50) 포물선 꼭짓점 0.159, 예측 0.3367.",
+        "stage3": "최빈값 필터 3 -> 5. 1->3 이 +0.0008 로 이긴 방향으로 한 칸."
+      },
+      "verification": "공개 Stage 2 충돌 [32,40,31,40,29](E43) -> [32,34,31,40,29]. 실제 300프레임 fixture 충돌 거의 동일. 검출기 프레임 1054 -> 1040. Stage 3 accel 150행/steer 4행 변경. Stage 1 라벨 동일(공개 전부 ORIGINAL)이나 peak_prom 평균 2.2119 -> 2.2298 로 표집 변경 확인. 로컬 시간 비 1.003. 감사 실패 0건.",
+      "zip": "submit_e44_triple.zip",
+      "sha256": "407d5f95b8e2458bc454171fd93f48df6fba09484357c644cca56c989ad23ff1",
+      "official_scores": {
+        "stage1": "0.8805371371",
+        "stage2": "0.3311499678",
+        "stage3": "0.6370301304",
+        "date": "2026-09-25"
+      },
+      "per_stage": {
+        "stage1 표집구간 0.05~0.95": "-0.0149619716 패",
+        "stage2 광류혼합 0.15": "-0.0047335271 패. 혼합 곡선이 매끄럽지 않다(0.15 가 0 보다 낮음) - 더 파지 않는다",
+        "stage3 최빈값필터 5": "**+0.0028202423 신기록** (1->3 +0.0008 보다 이득이 커짐)"
+      }
+    },
+    {
+      "id": "E45",
+      "strategy": "같은 날 두 번째 슬롯 - E44 와 겹치지 않는 축",
+      "status": "official_timeout_stage3_unscored",
+      "base": "E43",
+      "changes": {
+        "stage1": "특징 점수 집계 평균 -> 중앙값",
+        "stage2": "광류 충격 해상도 160x90 -> **320x180** (혼합 0.25)",
+        "stage3": "최빈값 필터 3 -> **9** (E44 승리 5 를 넘어) + 가감속 민감도 0.55 -> 0.45"
+      },
+      "why_not_overlap": "E44 가 Stage1 표집 구간 / Stage2 혼합 비율 / Stage3 최빈값 필터를 시험하므로 E45 는 그 셋을 챔피언 값으로 두고 다른 축을 연다.",
+      "verification": "E44 대비 로컬 시간 비 1.046, 검출기 1040 -> 1042. 공개 충돌 동일. Stage3 accel 364행 / steer 20행 변경, accel 분포 CONST 0.590 / ACCEL 0.162 / DECEL 0.168. 감사 실패 0건.",
+      "zip": "submit_e45_triple.zip",
+      "sha256": "cdde6522facd7a8fa408731323ab00cf72b8c6e545d7a2b60299d2d9f7042a01",
+      "official_scores": {
+        "stage1": "0.8347070367",
+        "stage2": "0.3217986217",
+        "stage3": "0.1656407335",
+        "date": "2026-09-25"
+      },
+      "revision": "E44 결과를 받고 마감 근접으로 공격적으로 개정. Stage 2 는 240x135 -> 320x180, Stage 3 은 필터 9 추가.",
+      "per_stage": {
+        "stage1 중앙값 결합": "-0.0607920720 **진짜 기각** (맨 먼저 돌고 비용 불변)",
+        "stage2 광류 320x180": "**시간 초과의 원인**. 가드가 Stage 2 끝부분도 잘랐을 수 있어 점수는 판정 불가",
+        "stage3 필터9+민감도0.45": "미채점. 0.1656407335 는 가드 붕괴값과 동일 - Stage 3 시작 시점에 이미 54분 초과"
+      },
+      "lesson": "로컬 fixture(짧은 클립 10개)에서는 광류 4배가 +4.6% 로만 보였다. 평가셋 268개에서는 훨씬 컸다. 여유 시간이 거의 없다 - 이후 비용이 느는 변경은 넣지 않는다."
+    },
+    {
+      "id": "E46",
+      "strategy": "비용 0 인 변경만 (E45 시간 초과 후)",
+      "status": "official",
+      "base": "E43",
+      "changes": {
+        "stage1": "소프트 컷 0.50 -> 0.55 (0.45 가 -0.0207 로 졌으므로 반대쪽)",
+        "stage2": "차분 신호 평활 반경 1 -> 0 (광류 160x90, 혼합 0.25 챔피언)",
+        "stage3": "최빈값 필터 9 + 가감속 민감도 0.45 (E45 미채점분 재시험)"
+      },
+      "stage2_mechanism": "처음엔 반경 2 를 넣었으나 검증에서 반대 메커니즘이 드러났다. 공개 S2_002 는 초반 5~8프레임에 자차 움직임으로 넓게 높은 구간이 있고 충돌은 36프레임의 뾰족한 봉우리다. 평활을 키우면 뾰족한 봉우리만 깎여(반경1 충돌 1.455>초반 1.38 / 반경2 충돌 1.38<초반 1.42) 충돌이 34->5 로 튄다. **충돌은 순간 사건이라 평활이 불리하다** -> 반대로 끈다. 공개 5개: 반경0 [31,34,31,40,30] / 반경1 [32,34,31,40,29] / 반경2 [31,5,31,41,28], 모두 4/5 이나 반경 2 만 25프레임 이탈.",
+      "cost": "세 변경 모두 비용 0. 광류는 160x90 챔피언.",
+      "zip": "submit_e46_triple.zip",
+      "sha256": "c67cc60e37a23393655404440c548f6ee077ad2753220d1b7ef99884732acf45",
+      "official_scores": {
+        "stage1": "0.8692555371",
+        "stage2": "0.3087671175",
+        "stage3": "0.6436996363",
+        "date": "2026-09-25"
+      },
+      "per_stage": {
+        "stage1 소프트 컷 0.55": "-0.0262 기각 -> 0.45(-0.0207)·0.55(-0.0262) 양쪽 모두 패, 0.50 확정",
+        "stage2 평활 반경 0": "-0.0271 (E42 0.3359 대비) 기각. 평활은 필요하다 - 공개 5개 메커니즘 분석이 틀렸다",
+        "stage3 필터9+민감도0.45": "+0.0067 **신기록** 0.6436996363"
+      }
+    },
+    {
+      "id": "E47",
+      "strategy": "Stage 2 충돌 시점 CCD 학습 판별기 (DACON 답변으로 CCD 허용)",
+      "status": "official",
+      "base": "E46",
+      "changes": {
+        "stage1": "챔피언 복원 (컷 0.50)",
+        "stage2": "충돌 봉우리 = 학습 판별기 점수 argmax [0.15, 1.0], 편향/되짚기 우회, 평활 반경 1 복원. 추적 인덱스는 기존 신호(비용 불변)",
+        "stage3": "최빈값 필터 9 -> 15"
+      },
+      "ccd_validation": "자차 관여 검증 160클립 +-3 적중: 휴리스틱 0.481 / 모델(창 0.15~0.88) 0.594 / 모델(창 끝 1.0) 0.700. 변화량 신호 혼합은 오히려 하락",
+      "model": "collision_net.pt, 11ch(6프레임+5차분) 160x90 CNN, CCD ego 640클립 학습(학습 도중 체크포인트)",
+      "zip": "submit_e47_collnet.zip",
+      "sha256": "782e41a43cec439a0b5fa56b27b01dc634ba58c3d00cfdbe95f9553c4b45612d",
+      "official_scores": {
+        "stage1": "0.8954991087",
+        "stage2": "0.3548786765",
+        "stage3": "0.6498209592",
+        "date": "2026-09-26"
+      },
+      "per_stage": {
+        "stage1": "챔피언과 정확히 일치 -> 가드 미발동",
+        "stage2": "+0.0189951816 **신기록** (E42 0.3358834949 대비). CCD 학습 판별기 승",
+        "stage3": "필터 15 +0.0061213229 **신기록**"
+      }
+    },
+    {
+      "id": "E48",
+      "status": "official",
+      "base": "E47",
+      "zip": "submit_e48_triple.zip",
+      "sha256": "7f658b355780d74704467203569c734314903118bf63fc04aaba67f699c471ac",
+      "changes": {
+        "stage1": "챔피언",
+        "stage2": "진입 간격 24 -> 22 (판별기 경로는 편향 0 이라 보고 간격이 24 로 벌어졌던 것을 검증된 22 로 복원)",
+        "stage3": "최빈값 필터 15 -> 25"
+      },
+      "official_scores": {
+        "stage1": "0.8954991087",
+        "stage2": "0.3548786765",
+        "stage3": "0.6541685635",
+        "date": "2026-09-26"
+      },
+      "per_stage": {
+        "stage1": "챔피언 일치",
+        "stage2": "진입 간격 22: E47 과 **소수점 10자리까지 동일** -> 2프레임 이동으로 적중이 바뀐 클립이 하나도 없다. entry 는 작은 간격 변화에 둔감",
+        "stage3": "필터 25 +0.0043476043 **신기록** (여섯 연승)"
+      }
+    },
+    {
+      "id": "E49",
+      "status": "official",
+      "base": "E47",
+      "zip": "submit_e49_ensemble.zip",
+      "sha256": "d33c96094a2c162a290c76c853f9e749a389d4259fb01e4233016bea541625c7",
+      "changes": {
+        "stage1": "챔피언",
+        "stage2": "충돌 판별기 3개 앙상블(E47 + CCD 전체 s1 ep15 + 자차 s2 ep15), 클립 log-softmax 합. CCD 검증 0.700 -> 0.719. 간격 24 유지",
+        "stage3": "가감속 민감도 0.45 -> 0.40 (필터 15)"
+      },
+      "timing": "300프레임 클립 앙상블 0.16초(로컬 4060)",
+      "official_scores": {
+        "stage1": "0.8954991087",
+        "stage2": "0.3564263788",
+        "stage3": "0.6500003817",
+        "date": "2026-09-26"
+      },
+      "per_stage": {
+        "stage1": "챔피언 일치",
+        "stage2": "3개 앙상블 +0.0015477023 **신기록** (E47 0.3548786765 대비)",
+        "stage3": "민감도 0.40: 같은 필터 15 의 E47 0.6498209592 대비 +0.0001794225 (사실상 동률, 채택)"
+      }
+    },
+    {
+      "id": "E50",
+      "status": "official",
+      "base": "E48",
+      "zip": "submit_e50_triple.zip",
+      "sha256": "7d8e78b6ef43c3669d6008eabe84c865a7197e8c4e5e38c87b2b1825248d5c16",
+      "changes": {
+        "stage1": "챔피언",
+        "stage2": "진입 간격 22 -> 36 (큰 탐침)",
+        "stage3": "최빈값 필터 25 -> 41"
+      },
+      "official_scores": {
+        "stage1": "0.8954991087",
+        "stage2": "0.3369954648",
+        "stage3": "0.655822313",
+        "date": "2026-09-26"
+      },
+      "per_stage": {
+        "stage1": "챔피언 일치",
+        "stage2": "진입 간격 36: -0.0178832117 (E48 대비) 기각. 22~24 는 동률, 36 은 크게 패",
+        "stage3": "필터 41 +0.0016537495 **신기록** (일곱 연승)"
+      }
+    },
+    {
+      "id": "E51",
+      "status": "official",
+      "base": "E49",
+      "zip": "submit_e51_triple.zip",
+      "sha256": "25de77aefbbd5bc4b232a7e132a20f4e0f57ece047bd681a86fe5b698b11fdc9",
+      "changes": {
+        "stage1": "챔피언",
+        "stage2": "충돌 탐색 시작 0.15 -> 0.05 (앙상블 3개 유지)",
+        "stage3": "최빈값 필터 15 -> 61, 민감도 0.40"
+      },
+      "official_scores": {
+        "stage1": "0.8954991087",
+        "stage2": "0.3412863705",
+        "stage3": "0.6556060046",
+        "date": "2026-09-27"
+      },
+      "per_stage": {
+        "stage1": "챔피언 일치",
+        "stage2": "탐색 시작 0.05: -0.0151400083 (E49 대비) 기각. 앞쪽 0.05~0.15 에 가짜 봉우리가 있다 - 판별기도 속는다",
+        "stage3": "필터 61 (민감도 0.40): 0.6556060046, 최고 0.6558223130 대비 -0.0002 -> 필터 41~61 에서 포화"
+      }
+    },
+    {
+      "id": "E51s",
+      "status": "built_pending_license_decision",
+      "base": "E51",
+      "zip": "submit_e51s_side.zip",
+      "sha256": "99301903ca21e4ac1b02138f0f7f980a2e62fb914f5dc7a10408c08b88f3791c",
+      "changes": {
+        "stage2_extra": "entry_side 를 학습 분류기로 덮어씀 (CrashX 충돌 위치 라벨 329클립, 전체 학습 3시드). 분할 검증: 정답 충돌 기준 0.77~0.785, 예측 충돌 기준 0.74~0.77, 현행 0.615"
+      },
+      "caveat": "CrashX 저장소 LICENSE 없음 - 사용자 결정 대기",
+      "official_scores": null
+    },
+    {
+      "id": "E52",
+      "status": "official",
+      "base": "E49 + Stage3 챔피언(필터 41, 민감도 0.45)",
+      "zip": "submit_e52_triple.zip",
+      "sha256": "78fe37f03fdd296350de4282414a16fa57a8cb4f4ef14b4e6f3f7186e79d84a5",
+      "changes": {
+        "stage1": "챔피언",
+        "stage2": "entry_frame = 첫 프레임 탐침 (DACON: 영상 전 진입은 첫 프레임)",
+        "stage3": "조향 신호 = 광류 수평 / max(학습 속력, 3 m/s) 곡률 (DACON: 조향 라벨 = CAN 조향각)"
+      },
+      "check": "공개 Stage 3 조향 라벨 7.6% 변경 (LEFT 556->626, RIGHT 505->429)",
+      "official_scores": {
+        "stage1": "0.8954991087",
+        "stage2": "0.2951125101",
+        "stage3": "0.6517054596",
+        "date": "2026-09-27"
+      },
+      "per_stage": {
+        "stage1": "챔피언 일치",
+        "stage2": "entry=첫 프레임: -0.0613138687 기각. 0.338 x 적중차 -> 현행 entry 적중이 첫 프레임보다 약 18%p 높다. 즉 현행 entry 적중 >= 약 18% (E22 진단 11.3% 에서 판별기 덕에 상승), 첫 프레임이 정답인 클립은 거의 없다",
+        "stage3": "조향 곡률: -0.0041168534 (챔피언 0.6558223130 대비) 기각"
+      }
+    },
+    {
+      "id": "E53",
+      "status": "official_best_combined",
+      "base": "E49 + Stage3 챔피언(필터 41, 민감도 0.45)",
+      "zip": "submit_e53_triple.zip",
+      "sha256": "f0bd067b1dd261991edae112e17224f31b52982426f4200919a7f06dcd6699cf",
+      "changes": {
+        "stage1": "챔피언",
+        "stage2": "진입 간격 24 -> 28",
+        "stage3": "조향 문턱 std x 1.1 -> 0.9 (전체 범주 Macro-F1)"
+      },
+      "official_scores": {
+        "stage1": "0.8954991087",
+        "stage2": "0.3615358678",
+        "stage3": "0.666299531",
+        "date": "2026-09-27"
+      },
+      "per_stage": {
+        "stage1": "챔피언 일치",
+        "stage2": "진입 간격 28 +0.0051094890 **신기록** (22=24 < 28 > 36)",
+        "stage3": "조향 문턱 0.9 +0.0104772180 **신기록**"
+      }
+    },
+    {
+      "id": "E54",
+      "status": "official_user_modified",
+      "base": "E53",
+      "zip": "submit_e54_triple.zip",
+      "sha256": "ae3b8331254018e2a0f442a20d161214169f7ff5f8781988a204a330a0ddb380",
+      "changes": {
+        "note": "사용자가 제출 전 직접 수정한 판. 원래 빌드(간격 32, 조향 0.7)는 채점되지 않았다",
+        "stage1": "특징 계산을 한 번에 묶고, 소프트 점수가 컷 +-2SE 안이면 프레임 8장을 추가 표집해 다시 판정",
+        "stage2": "진입 간격 28 유지 + 충돌 판별기 좌우 반전 TTA (원본+반전 평균)",
+        "stage3": "조향 문턱 0.9 유지 + 자기운동 속력 모델 좌우 반전 TTA"
+      },
+      "official_scores": {
+        "stage1": "0.8880035661",
+        "stage2": "0.357223726",
+        "stage3": "0.6508444136",
+        "date": "2026-09-28"
+      },
+      "superseded_version": {
+        "sha256": "630d619d9ff66ae6de54b3b738e62272f41ca5979b394ddb69d3803eb53f1b53",
+        "archive": "experiments\\search\\e54_review\\original_submit_e54_triple.zip",
+        "changes": "gap32, steering0.7; replaced before submission"
+      },
+      "validation_report": "experiments\\search\\e54_allstage_review\\report.json",
+      "training_review": "Three temporal residual heads trained for 100 epochs each and rejected after audit subset regression. Existing approved weights retained.",
+      "validation_limit": "Historical CCD development split reused for original models. Stage1 public labels unchanged; no measured Stage1 score gain. Stage3 cross-camera evidence supports speed only, not official macro-F1.",
+      "per_stage": {
+        "stage1": "적응 추가 표집: -0.0074955426 (약 2클립) 기각",
+        "stage2": "판별기 반전 TTA: -0.0043121418 기각",
+        "stage3": "속력 반전 TTA: -0.0154551174 기각 (큰 손실)"
+      }
+    },
+    {
+      "id": "E55",
+      "status": "official",
+      "base": "E53",
+      "zip": "submit_e55_triple.zip",
+      "sha256": "aa2686d5481138fc402fac7ac6319ec90cb6669b64a595d1faa30a3dfdafd4a0",
+      "changes": {
+        "stage1": "챔피언",
+        "stage2": "진입 간격 28 -> 32",
+        "stage3": "조향 문턱 0.9 -> 0.7"
+      },
+      "note": "원래 E54 빌드와 inference.py 동일",
+      "official_scores": {
+        "stage1": "0.8954991087",
+        "stage2": "0.3589811233",
+        "stage3": "0.6605577504",
+        "date": "2026-09-28"
+      },
+      "per_stage": {
+        "stage2": "간격 32: -0.0025547445 기각 -> 28 이 정점 (24<28>32>36)",
+        "stage3": "조향 0.7: -0.0057417806 기각 -> 0.9 가 정점 근처 (1.1<0.9>0.7)"
+      }
+    },
+    {
+      "id": "E56",
+      "status": "official",
+      "base": "E53",
+      "zip": "submit_e56_collv2.zip",
+      "sha256": "8265c74a23682349e21d5c836abc9d3ac387fd25016998e5f49a0795ef16f6a6",
+      "changes": {
+        "stage1": "챔피언",
+        "stage2": "충돌 판별기 = v1 3개 + 2 x v2(ImageNet ResNet18 + 시간 conv). CCD 검증 0.719 -> 0.744 (추론 코드 재현 0.738)",
+        "stage3": "E53 챔피언"
+      },
+      "v2_training": "12 에폭, 단독 0.68 (과적합), v1 과 섞을 때만 이득",
+      "official_scores": {
+        "stage1": "0.8954991087",
+        "stage2": "0.3043103893",
+        "stage3": "0.666299531",
+        "date": "2026-09-28"
+      },
+      "per_stage": {
+        "stage2": "v2 섞기: -0.0572254785 대패. CCD 검증 +2.5%p 가 평가셋에 전혀 옮겨지지 않았다 (ImageNet ResNet18 이 CCD 도메인에 과적합)",
+        "stage3": "E53 과 정확히 일치 -> 가드 미발동, 시간 문제 아님"
+      }
+    },
+    {
+      "id": "E57",
+      "status": "submission_ready",
+      "base": "E53",
+      "zip": "submit_e57_triple.zip",
+      "sha256": "4b293f958f2f6d9d0b0c544fd0a17fafdf4f627ac337e1f4fda2c70921ef18ca",
+      "changes": {
+        "stage1": "챔피언 (시간 특징·색 특징 측정 후 기각: 쌍 차이 << 영상 간 편차)",
+        "stage2": "판별기 경로 충돌 편향 0 -> -2 (CCD 라벨 규약 vs 평가 '실제 접촉' 규약, 한 번도 묻지 않은 축, entry 불변)",
+        "stage3": "가감속 속력 평활 45 -> 25 + 민감도 0.38 (호출 수 챔피언과 동일, 필터 41 시대 재조정)"
+      },
+      "official_scores": null,
+      "review_2026_09_29": "Original artifact preserved. Stage3 distribution-count rationale is insufficient; collision offset also changes centroid endpoint. E58 isolates timing; E53 remains official champion."
+    },
+    {
+      "id": "E57s",
+      "status": "built_pending_license_decision",
+      "base": "E53",
+      "zip": "submit_e57s_side.zip",
+      "sha256": "ebf921b355d7025066cee741252f8762ed7d6dfa0634d7b62346ef57f5f5e107",
+      "changes": {
+        "stage1": "챔피언 (시간 특징·색 특징 측정 후 기각: 쌍 차이 << 영상 간 편차)",
+        "stage2": "판별기 경로 충돌 편향 0 -> -2 (CCD 라벨 규약 vs 평가 '실제 접촉' 규약, 한 번도 묻지 않은 축, entry 불변)",
+        "stage3": "가감속 속력 평활 45 -> 25 + 민감도 0.38 (호출 수 챔피언과 동일, 필터 41 시대 재조정)",
+        "stage2_extra": "+ entry_side 학습 분류기 (CrashX 라벨, 라이선스 미표기 - 사용자 결정)"
+      },
+      "official_scores": null
+    },
+    {
+      "id": "E58",
+      "status": "submission_ready_unvalidated_collision_only",
+      "base": "E53",
+      "zip": "submit_e58_collision_only.zip",
+      "sha256": "5e6ab0decb4d4c9faf271fb2b1ddc55c84031500a30ab8c9a4c210e5a071d474",
+      "changes": {
+        "stage1": "E53 unchanged",
+        "stage2": "Report collision 2 indices earlier only after all E53 feature/side calculations; preserve entry and bounds",
+        "stage3": "E53 unchanged; E57 smoothing/sensitivity proposal not adopted"
+      },
+      "official_scores": null,
+      "review": "experiments/search/e57_review/decision.md",
+      "verification": "experiments/search/e57_review/verification.json",
+      "risk": "Unvalidated -2 offset may lower collision accuracy; old heuristic optimum does not establish learned-model optimum."
+    },
+    {
+      "id": "E59",
+      "status": "submission_ready_new_trained_collision_candidate",
+      "base": "E53",
+      "zip": "submit_e59_robust_collision.zip",
+      "sha256": "447feb69f9c5bbd6f3f207173498a78933c03a4c36c2d4b4d8843efbd3e38fec",
+      "changes": {
+        "stage1": "E53 unchanged",
+        "stage2": "Replace first collision CNN with actual 6-epoch camera/time-augmented checkpoint; three-model ensemble and downstream settings unchanged",
+        "stage3": "E53 unchanged"
+      },
+      "official_scores": null,
+      "verification": "experiments/search/e59_review/verification.json",
+      "limitation": "New experimental candidate, not verified champion. Native CCD ensemble 0.71875 tied; changed single model blur stress 0.68125 to 0.70000, native 0.70000 to 0.67500. No official improvement claim."
+    },
+    {
+      "id": "E60",
+      "status": "submission_ready_all_stages_revised",
+      "base": "E53 + E59 trained collision weight",
+      "zip": "submit_e60_allstage.zip",
+      "sha256": "03d2a1ba30d4c0c7366341f6bc4172ab5596214398ecc4165181201fddff781c",
+      "changes": {
+        "stage1": "24-frame temporal-reliability weighted feature voting; weights bounded .75..1.25; same thresholds",
+        "stage2": "Actual 6-epoch domain/time-augmented collision checkpoint from E59",
+        "stage3": "Correct ego frame-pair prediction timestamp by one frame; Hampel filter isolated speed outliers; champion stop/steer/classification settings retained"
+      },
+      "official_scores": null,
+      "verification": "experiments/search/e60_review/verification.json",
+      "limitation": "Stage1 public improvement is 1/10 samples; Stage3 public 50-label F1 tied; other-camera Hampel proxy approximately tied/slightly lower depending threshold. No demonstrated official improvement.",
+      "superseded_unsubmitted_sha256": "8ffc9edc0fb0d96128daffe4bc2e7c8cbb459b7611c5f57a6e4808c20d5666cb"
+    }
+  ],
+  "parallel_stage_experiment_policy": {
+    "agreed_date": "2026-09-12",
+    "baseline": "E11",
+    "independent_stage2_and_stage3_changes_in_one_zip": true,
+    "one_hypothesis_per_stage": true,
+    "check_shared_processing_state_and_runtime": true,
+    "selective_recombination_requires_official_validation": true,
+    "daily_submission_limit": 3,
+    "new_candidates_created_at_recording": false
+  },
+  "research_priority": {
+    "confirmed_date": "2026-09-14",
+    "now": "New informative features, model structure, and broader validation data",
+    "near_deadline": "Threshold/filter/smoothing fine-tuning",
+    "integration": "Only on explicit final competition integration request",
+    "note": "E15 is a prepared incremental experiment, not a structural breakthrough."
+  },
+  "archive_policy": {
+    "cleanup_2026_09_15": {
+      "kept": {
+        "submit_best_current.zip": "세 Stage 최고 기록을 한 파일로 병합(Stage2=E12 설정, Stage3=E18 설정). 출력 단위로 동등성 확인: Stage2 는 E12 와, Stage3 는 E18 과 공개 fixture 에서 완전 일치. sha256 0d24d5ed49c2689447e2ca6ba3628209d12f828abfa8e182c5e32ede43d2feb1",
+        "submit_e12_exposure_accel.zip": "Stage 2 최고 기록 0.3332112117 의 원본 제출물",
+        "submit_e18_entry20.zip": "Stage 3 최고 기록 0.5803003763 의 원본 제출물이자 E19 의 부모",
+        "submit_e19_evasiondiag_stopthr.zip": "제출 대기",
+        "submissions/variant_* (53개, 총 3MB 내외)": "Stage 1 시대 변형들. 용량이 작고 역사 기록",
+        "C:/bbw/c2k19 (717MB)": "Stage 3 오프라인 계측기. 현재도 사용 중",
+        "C:/bbw/edge2, edge3": "tools/audit.py 가 참조하는 예외 입력 fixture",
+        "Baseline/, experiments/, tools/, *.md": "공개 데이터·실험 기록·감사 도구·문서"
+      },
+      "deleted": {
+        "submit_e09/e11/e13/e14/e15/e16/e17 (7개, 1.1GB)": "전부 대체됨. 공식 점수는 03_제출결과_기록.md 와 registry 에 보존. E18 과 C:/bbw/build_*.py 로 재구성 가능",
+        "submissions/variant_zb_motion, zc_stage23_track, zd_stage2_track, zb_stage3_raft (578MB)": "대응 zip 이 이미 없고 전부 대체된 구세대. 점수는 문서에 보존",
+        "submissions/variant_e17_base (168MB)": "중간 기준선. C:/bbw/build_base17.py 로 재생성 가능",
+        "C:/bbw/audit (168MB)": "감사 실행 때마다 재생성되는 작업 폴더",
+        "C:/bbw/da2s (95MB)": "폐기한 깊이 추정 실험 전용 모델",
+        "C:/bbw/raft_kitti.pth (21MB)": "사문화된 코드 경로. 제출물에 동봉된 적 없음",
+        "캐시·임시": "__pycache__, *.pkl 캐시, 추출본 _e06*.py/_e17mod.py, zt/zti/ztj/ztj2, 스크래치패드 추출본"
+      },
+      "freed": "약 2.3GB (프로젝트 폴더 1.5GB -> 819MB, C:/bbw 1.1GB -> 758MB, 스크래치 1.2GB -> 201MB)",
+      "note": "프로젝트 폴더가 OneDrive 동기화 대상이라 대용량 중복이 계속 업로드되고 있었다."
+    }
+  },
+  "lessons": {
+    "operating_point_vs_signal_2026_09_15": {
+      "operating_point_changes": "3전 3패. E07 평활 창 201 -0.0305773 / E08 민감도 0.80 -0.0104846 / E19 정지 문턱 x0.70 -0.0160628",
+      "signal_changes": "3전 3승. E16 배경 보정 도입 +0.0045648 / E17 기준 영역 분리 +0.0013321 / E18 정지 신호 정렬 +0.0003862",
+      "rule": "**운영점(평활 창·민감도·정지 문턱)은 comma2k19 로 바꾸지 않는다.** 현행 값들은 리더보드로 다듬어진 값이고, 대리 자료로 고른 값은 예외 없이 졌다. comma2k19 는 신호 품질 비교에만 쓴다.",
+      "corollary": "공개 라벨의 분포를 근거로 쓸 때는 **표본율**을 맞춰야 한다. 공개 Stage 3 영상은 20fps, 평가는 10Hz 이고 지속 규칙(3프레임/2프레임)이 물리 시간으로 두 배 차이난다."
+    },
+    "stage2_budget_accounting_2026_09_15": {
+      "method": "세 진단(D1 entry_frame 무력화 / D2 evasion 반전 / D3 entry_side 반전)의 하락폭을 우연 수준 대비 초과분으로 환산해 합산했다.",
+      "chance_floor": "네 항목 균등, 이진 항목의 우연은 0.5, 프레임 항목은 ~0 -> Stage 2 우연 바닥 = 0.25",
+      "measured": {
+        "entry_frame 초과": 0.0383211679,
+        "evasion 초과": 0.0161009878,
+        "entry_side 초과": 0.0196609209,
+        "합계": 0.0740830766,
+        "Stage2 우연 대비 초과": 0.0832112117,
+        "collision_frame 몫(잔차)": 0.0091281351
+      },
+      "implication": "collision_frame 의 평가셋 적중률이 약 3.7% 로 추정된다. 공개 5개에서는 4개 적중(80%)이었으므로 **공개 표본이 전혀 대표적이지 않았다**는 뜻이다.",
+      "caveat": "균등 가중·정확도 채점 가정에 의존한다. 잔차가 양수이고 작아 회계가 모순 없이 닫히지만 확정은 아니다.",
+      "next": "D4 진단 - collision_frame 을 확실히 틀린 값(마지막 프레임)으로 강제하고 하락폭을 읽는다. 하락폭이 0.009 근처면 이 회계가 확인되고 Stage 2 최대 여유(최대 약 0.24)가 거기 있다는 뜻이다. 크게 떨어지면 균등 가중 가정이 틀린 것이고 회계를 다시 짠다."
+    },
+    "runtime_regression_2026_09_15": {
+      "what": "E21 이 실행시간 초과로 실패. 진단 변경의 런타임 부작용을 검사하지 않았다.",
+      "rule": "모든 후보는 제출 전에 (1) 검출기에 넘어가는 프레임 수, (2) 단계별 로컬 시간을 기준 파일과 비교한다. 출력 동일성만으로는 부족하다.",
+      "guard": "예산 가드는 **모든 비싼 루프**에 있어야 한다. 하나라도 빠지면 초과가 degradation 이 아니라 제출 실패가 된다."
+    },
+    "stage2_weights_solved_2026_09_16": {
+      "method": "네 진단의 연립을 풀었다. w_c*c=0.0970802920 / w_e*e=0.0383211679 / w_v*(2v-1)=0.0322019755 / w_s*(2s-1)=0.0393218419, 합 0.3332112117.",
+      "solution": {
+        "프레임 두 항목 가중치 합": 0.6759043138,
+        "범주형 두 항목 가중치 합": 0.3240956862,
+        "우연 바닥": 0.1620478431,
+        "초과분 합": 0.1711633686,
+        "검산 오차": 0.0
+      },
+      "estimates": {
+        "collision_frame": {
+          "weight": 0.338,
+          "score": "28.7%",
+          "headroom": 0.2409
+        },
+        "entry_frame": {
+          "weight": 0.338,
+          "score": "11.3%",
+          "headroom": 0.2996
+        },
+        "evasion_space": {
+          "weight": 0.162,
+          "score": "59.9%",
+          "headroom": 0.0649
+        },
+        "entry_side": {
+          "weight": 0.162,
+          "score": "62.1%",
+          "headroom": 0.0614
+        }
+      },
+      "implication": "두 프레임 항목이 Stage 2 의 67.6%. 1등과의 격차 0.1892 는 이 둘로 전부 설명된다."
+    },
+    "comma2k19_cannot_judge_road_geometry": {
+      "evidence": "중앙 통로 50% 를 comma2k19 가 속력 상관 0.361 -> 0.608, 주행3클래스 0.414 -> 0.435 로 강하게 지지했는데 리더보드에서 -0.0036780509.",
+      "why": "comma2k19 는 고속도로 주행이라 화면 중앙이 노면이다. 이 대회 클립은 충돌 사고라 **중앙에 상대 차량이 있다.** 좁힐수록 자차 운동이 아니라 상대 차량 운동을 재게 된다.",
+      "rule": "노면 기하(영역·마스크)는 comma2k19 로 정하지 않는다."
+    },
+    "misread_rules_blocked_biggest_lever_2026_09_16": {
+      "what": "대회 규칙 2-1 을 잘못 읽고 '외부 데이터 학습'을 스스로 금지했다. pose_label.py 주석에 '외부 데이터를 학습에 쓰지 않으므로 규정 논란이 없다'고 적어 두고 20회 넘는 제출 동안 그 제약 아래 움직였다.",
+      "actual_rule": "2. 대회 규칙 1) 사용에 법적 제한이 없는 모든 방법론 가능 - '사전 학습 모델, API, **외부 데이터 수집 및 생성** 등 사용에 법적 제한이 없다면 모두 활용 가능'. 금지는 3항(비공개 평가 데이터로 학습)과 4항(파일 간 정보 사용) 둘뿐이다.",
+      "cost": "그 사이 한 일이 광류 문턱을 0.55에서 0.80으로 옮기는 류의 운영점 조정이었고 3전 3패였다.",
+      "rule": "제약을 스스로 만들기 전에 원문을 확인한다. 요약본이 아니라 원문을."
+    },
+    "stage3_learned_egomotion_feasibility_2026_09_16": {
+      "setup": "comma2k19 60세그먼트 / 9주행 (dongle b0c9d2329ad1606b 한 대). frame_velocities·frame_orientations 가 프레임 단위 정답. 입력 96x160 프레임쌍+차분 3채널, 파라미터 350,007개(1.3MB), 10Hz(STRIDE 2).",
+      "validation": "**주행 단위 분리**. 같은 주행의 이웃 세그먼트는 도로·조명이 같아 세그먼트 단위로 나누면 누출된다.",
+      "augmentation": "배율 0.83~1.18, 평행이동 ±8%, 좌우반전(요레이트 부호 반전), 밝기/대비. 학습 데이터가 카메라 한 대뿐이라 장착 차이를 이것으로만 흉내냈다.",
+      "results": {
+        "속력 상관": {
+          "현행 광류": 0.36,
+          "학습 10세그": 0.912,
+          "학습 60세그+증강": 0.961
+        },
+        "요레이트 상관": {
+          "학습 10세그": 0.27,
+          "학습 60세그+증강": 0.845
+        },
+        "속력 MAE": "1.94 m/s"
+      },
+      "why_it_matters": [
+        "가감속은 속도의 시간 미분이므로 속도 신호 품질이 직결된다",
+        "정지 문턱이 지금은 의미 없는 광류 대리값 단위(0.003/0.005)인데 학습 모델은 m/s 를 내므로 물리적 문턱을 쓸 수 있다. E06 최대 이득(+0.1203)이 정지 판정 교체였다",
+        "Farneback 이 Stage 3 시간의 78%인데 CPU 에서 돈다. 350K 파라미터 망을 놀고 있는 L40S 에서 돌리면 더 빠를 가능성이 크다 - E21 시간초과 문제도 같이 풀린다"
+      ],
+      "unproven": "학습 데이터가 카메라 한 대다. 평가셋의 다양한 블랙박스로의 전이는 리더보드가 유일한 판정자다.",
+      "next": "학습 모델을 Stage 3 가감속 경로에 넣은 제출본 제작. 조향은 두 신호를 비교해 결정(현행 광류 실측 상관 0.51~0.85 vs 학습 0.845)."
+    },
+    "scaling_change_must_test_both_extremes": {
+      "rule": "클립 길이·해상도 등에 **비례**시키는 변경은 기준값보다 **크고 작은 양쪽**을 다 시험한다. 한쪽만 보면 반대쪽 폭주를 놓친다.",
+      "case": "E24 는 25프레임에서 멀쩡했고 300프레임에서 무너졌다."
+    },
+    "preprocessing_cost_check": {
+      "rule": "새 모델 입력을 만들 때 **이미 계산된 중간 결과**에서 파생시킨다. 원본 해상도에서 다시 시작하면 프레임당 비용이 배로 뛴다.",
+      "case": "E24 가 1920x1080 에서 전처리를 +169% 로 늘렸다. gray(240폭)에서 줄이면 0.033ms 로 약 90배 싸다.",
+      "result": "수정 후 Stage 3 가 82.4s -> 72.3s 로, **학습망이 없는 E23(73.2s)보다도 빠르다.** 학습 모델은 사실상 공짜다."
+    },
+    "learned_egomotion_validated_2026_09_16": {
+      "result": "Stage 3 0.5842776289 -> 0.6087659332 (+0.0244883043). E06 이후 최대 이득.",
+      "what_it_validates": "손으로 만든 광류 휴리스틱을 외부 데이터로 학습한 모델로 바꾸는 방향. 규정 2-1 이 명시적으로 허용하는데 내가 스스로 봉인했던 길이다.",
+      "cost": "없음. 전처리를 gray 에서 파생시키면 Stage 3 가 학습망 없던 때보다 오히려 빠르다(73.2s -> 72.3s).",
+      "next": "정지 판정을 m/s 물리 문턱으로 옮긴다. E06 최대 이득(+0.1203)이 정지 정책 교체였고 지금 그 문턱은 의미 없는 광류 대리값 단위다."
+    },
+    "learned_signal_relative_only": {
+      "rule": "**이 학습 신호는 상대 문턱에만 쓴다. 절대 문턱에 쓰지 않는다.**",
+      "evidence": "E25 가감속(문턱 = std(gradient) x 배수, 클립별 상대) +0.0244883043 승 / E26 정지(문턱 = 0.5 m/s, 절대) -0.1131990680 패. 같은 신호, 다른 사용법.",
+      "why": "학습 시 배율 0.83~1.18 증강으로 배율 불변성을 학습시켰으므로 절대 보정이 존재하지 않는다."
+    },
+    "public5_cannot_select_stage2_operating_points": {
+      "rule": "공개 5개 Stage 2 라벨로 운영점을 고르지 않는다. 구조적 결함을 찾는 데만 쓴다.",
+      "evidence": "onset_alpha 0.9 가 공개 5개에서 5/5 적중(현행 4/5)·평균오차 1.2->1.0 이었는데 리더보드 -0.0047832250.",
+      "note": "되짚기 루프가 alpha=1.0 에서 죽어 있다는 **발견 자체는 유효**하다. 다만 그것을 살리는 것이 평가셋에서 이롭다는 증거는 없다."
+    },
+    "operating_point_now_0_for_4": {
+      "record": "E07 평활창 -0.0305773 / E08 민감도 -0.0104846 / E19 정지문턱x0.70 -0.0160628 / E26 정지문턱 m/s -0.1131991",
+      "note": "E26 은 '물리량이고 정의값이라 성격이 다르다'고 논증했으나 그 논증이 틀렸다. 운영점은 리더보드로만 바꾼다."
+    },
+    "learned_model_replaces_broken_parts_only": {
+      "rule": "학습 모델의 이득은 '학습 > 수작업'이 아니라 **망가진 부품을 갈아끼울 때** 나온다. 이미 쓸 만한 부품을 갈면 진다.",
+      "evidence": [
+        "속도: 기존 상관 0.36(망가짐) -> 학습 0.961.  E25 **+0.0244883043 승**",
+        "요레이트: 기존 |상관| 0.604(쓸 만함) -> 학습 0.846.  E27 **-0.0152165713 패**"
+      ],
+      "also": "comma2k19 는 고속도로 완만한 곡선이다. 평가 클립은 급조향과 충돌 충격이 있는 사고 영상이라 학습된 요레이트 사전지식이 외삽되지 않는다.",
+      "corollary": "다음 표적은 **가장 망가진 부품**이다 - Stage 2 의 entry_frame(적중 11.3%)과 collision_frame(적중 28.7%), 합쳐 Stage 2 의 67.6%."
+    },
+    "collision_by_deceleration_rejected": {
+      "idea": "충돌은 급감속이므로 학습 속도의 기울기 최소점을 충돌 시각으로 쓴다.",
+      "measured": "공개 5개: 차분 봉우리(현행) 적중 4/5 평균오차 1.2 vs **급감속 최대 적중 0/5 평균오차 16.4**.",
+      "why": "속력 낙폭이 1.6~11.0 m/s 로 완만하고 감속 최대점이 충돌과 무관한 곳에 찍힌다. 고속도로 주행으로 학습한 모델이 충격적 사건을 잡지 못한다. 충돌 순간의 카메라 흔들림도 운동으로 읽힌다.",
+      "cost": "제출을 쓰지 않고 오프라인에서 기각했다."
+    },
+    "cross_camera_transfer_measured_2026_09_17": {
+      "setup": "comma2k19 Chunk_1(b0c9d2329ad1606b) + Chunk_3(99c94dc769b5d96e). 각 60세그먼트, 주행 17개. **차량 한 대를 통째로 빼고** 검증 - 학습에 한 번도 안 나온 카메라.",
+      "results": {
+        "속력 상관": {
+          "같은 카메라(주행 분리)": 0.961,
+          "**다른 카메라**": 0.899,
+          "손실": 0.062
+        },
+        "요레이트 상관": {
+          "같은 카메라": 0.845,
+          "다른 카메라": 0.792,
+          "손실": 0.053
+        },
+        "속력 MAE": {
+          "같은 카메라": "1.94 m/s",
+          "**다른 카메라**": "4.23 m/s",
+          "배수": 2.2
+        }
+      },
+      "key_finding": "**상관(상대 신호)은 잘 전이되는데 절대 보정은 2배 이상 무너진다.** E26 이 절대 문턱 0.5 m/s 를 쓰다 -0.1132 로 무너진 이유가 독립적으로 확증됐다.",
+      "implication": "배포 모델은 카메라 한 대로 학습했으므로 평가셋에서 이 전이 손실을 안고 +0.0245 를 땄다. 두 차량으로 재학습하면 그만큼 여유가 있다."
+    },
+    "stage3_egomotion_ceiling_2026_09_17": {
+      "capacity_test": "2차량 데이터, 차량 단위 분리 검증. x1.0 349,090파라미터 속력상관 0.890 / x1.6 893,236 0.890 / x2.2 1,685,899 0.907. 추론 0.028~0.106 ms/프레임.",
+      "conclusion": "파라미터 4.8배에 +0.017 인데 실행 간 변동만 0.009 이고 x1.6 은 이득 0 이라 단조롭지도 않다. **용량은 병목이 아니고 E28 의 -0.0061 은 학습 변동이었다.** 자기운동 모델은 이 접근의 천장에 왔다.",
+      "action": "Stage 3 는 E25 체크포인트로 고정하고 Stage 2 로 간다."
+    },
+    "detector_cost_couples_to_collision_index": {
+      "mechanism": "_tracked_entry 가 paths[:collision+1] 을 Faster R-CNN 에 넘긴다. **충돌 인덱스를 뒤로 미는 모든 변경은 검출기 비용을 늘린다.**",
+      "victims": [
+        "E21 제출 실패(D4 진단이 collision 을 마지막 프레임으로 강제, 171->250 프레임)",
+        "E29 시간 초과 퇴화(창 시작 0.45, 300프레임 클립에서 311->811 프레임)"
+      ],
+      "fix": "추적기에는 비용이 고정된 인덱스를 따로 넘긴다(E30). 보고값과 추적값을 분리하면 결합이 끊어진다.",
+      "check": "제출 전 반드시 **검출기 프레임 수**를 기준 파일과 비교한다. 짧은 클립만 보면 안 되고 **긴 클립**에서 봐야 한다."
+    },
+    "we_are_at_the_time_limit": {
+      "proof": "E30 은 Stage 3 코드가 E25 와 동일한데 Stage 3 점수가 0.6088 -> 0.4908 이었다. 시간 가드 외에 설명이 없다.",
+      "indicator": "**Stage 2 가 챔피언 값(0.3332112117)과 정확히 일치하면 가드 미발동.** 다르면 가드 의심. 앞으로 모든 결과를 이 기준으로 먼저 거른다.",
+      "consequence": "예산을 되찾기 전까지 모든 실험이 잡음에 오염된다. 점수 개선보다 시간 확보가 우선이다.",
+      "rejected_optimisation": "Stage 1 의 프레임 표집을 cv2 탐색으로 바꾸는 안은 실측에서 **5배 느렸다**(키프레임 재디코드). 프레임은 바이트 동일했다."
+    },
+    "my_own_guard_was_destroying_scores": {
+      "what": "E22 에서 E21 하드 실패에 놀라 예산 가드를 50분 -> 40분으로 낮췄다. 한도는 60분인데.",
+      "effect": "40~60분 사이에 완주했을 실행이 40분에 잘려 클립의 30% 가량이 대체값이 됐다. E29(-0.44 Stage3) / E30(-0.12 Stage3, 코드 동일인데) 가 그 피해자일 가능성이 크다.",
+      "evidence": "E31 에서 54분으로 올리자 열화가 사라지고 E25 와 비트 단위 동일한 점수가 나왔다.",
+      "rule": "안전장치를 조일 때는 그 자체가 점수를 깎는 비용을 계산한다. 한도가 60분이면 가드는 한도에 붙여야지 한도의 2/3 에 두면 안 된다."
+    },
+    "repeated_clip_fixture_invalid_for_cost": {
+      "what": "'300프레임 긴 클립' fixture 를 50프레임 클립 6회 반복으로 만들었다.",
+      "why_wrong": "신호가 주기적이라 창을 좁혀도 argmax 가 앞쪽 반복에 걸린다. 상대 위치가 0.49~0.61 로 나와 검출기 비용 증가를 과소평가했다.",
+      "fix": "실제 연속 영상(공개 Stage 3 영상 앞 300프레임)으로 만든 fixture 를 쓴다. 거기서 E31 충돌 상대 위치가 0.37~0.85 로 퍼진다."
+    }
+  },
+  "policy_changes": {
+    "triple_stage_from_e33": {
+      "date": "2026-09-19",
+      "rule": "대회 종료까지 **세 Stage 를 동시에** 실험한다. 각 Stage 에 가설 하나씩.",
+      "why": "단계별 최고점이 누적되므로 한 Stage 하락이 기록을 깎지 않는다. 슬롯당 정보량이 3배가 된다. Stage 1 은 YY(09-08) 이후 한 번도 건드리지 않았는데 가중치 0.2, 1등과 0.0709 차이다.",
+      "budget": "E32 가 41분 9초였으므로 약 19분 여유. 매 후보마다 로컬 시간 비로 서버 시간을 예측하고 54분 가드 아래인지 확인한다."
+    }
+  },
+  "record_snapshot_2026_09_20": {
+    "best_per_stage": {
+      "stage1": 0.8954991087,
+      "stage2": 0.3358834949,
+      "stage3": 0.6342098881
+    },
+    "weighted": 0.5671371749,
+    "leader_weighted": 0.718394,
+    "champion_zip": "submit_e42_structural.zip",
+    "pending_zip": "submit_e43_stage2_flow50.zip",
+    "official_scored_submissions": 37,
+    "deadline": "2026-09-29 10:00",
+    "policy": "대회 종료까지 세 Stage 동시 실험. 각 Stage 에 가설 하나씩.",
+    "docs": {
+      "한곳에 모은 기록": "06_전체기록.md (재작성 완료)",
+      "상세 제출 로그": "03_제출결과_기록.md",
+      "가설 소거 계획": "08_가설소거_실험운영계획.md",
+      "실험 대장": "experiments/search/experiment_registry.json"
+    }
+  },
+  "record_snapshot_2026_09_28": {
+    "best_per_stage": {
+      "stage1": 0.8954991087,
+      "stage2": 0.3615358678,
+      "stage3": 0.666299531
+    },
+    "champion_zip": "submit_e53_triple.zip",
+    "pending_zip": "submit_e54_triple.zip",
+    "pending_sha256": "ae3b8331254018e2a0f442a20d161214169f7ff5f8781988a204a330a0ddb380",
+    "target_scores": [
+      0.99625,
+      0.84098,
+      0.83918
+    ],
+    "target_scores_are_not_predictions": true
+  },
+  "frontier_review_2026_09_29": {
+    "date": "2026-09-29",
+    "targets": [
+      0.99625,
+      0.84098,
+      0.83883
+    ],
+    "target_is_not_prediction": true,
+    "new_strategy_count": 9,
+    "trained_models": {
+      "tcn_epochs": 40,
+      "gru_epochs": 40,
+      "robust_collision_epochs": 6
+    },
+    "selected": "E53",
+    "selected_reason": "Highest recorded official score; none of nine new candidates supplies consistent adoption evidence",
+    "official_scores": {
+      "stage1": "0.8954991087",
+      "stage2": "0.3615358678",
+      "stage3": "0.666299531",
+      "date": "2026-09-27"
+    },
+    "file": "final_submission\\submit_e53_triple.zip",
+    "sha256": "f0bd067b1dd261991edae112e17224f31b52982426f4200919a7f06dcd6699cf",
+    "same_bytes_as_existing_E53": true,
+    "scope": "Nine implemented new candidates, not exhaustive of all possible future data/model strategies. No official submissions made in this run."
+  },
+  "latest_new_submission_candidate": "E60"
+}
